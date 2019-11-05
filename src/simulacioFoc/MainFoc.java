@@ -1,5 +1,6 @@
 package simulacioFoc;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -23,7 +24,7 @@ public class MainFoc extends JFrame {
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
-		
+		this.setMinimumSize(new Dimension(300, 300));
 		this.setLayout(new GridBagLayout());
 		
 		GridBagConstraints c = new GridBagConstraints();
@@ -41,7 +42,7 @@ public class MainFoc extends JFrame {
 	}
 
 	public static void main(String[] args) throws IOException {
-		Image imatge = ImageIO.read(new File("/home/oleander/Imágenes/Fondos/sunset_in_rome-wallpaper-1366x768.jpg"));
+		Image imatge = ImageIO.read(new File("/home/oleander/Imágenes/ImatgePerFocJava.png"));
 		new MainFoc(imatge);
 	}
 

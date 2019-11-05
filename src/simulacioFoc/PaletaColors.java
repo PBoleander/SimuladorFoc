@@ -45,19 +45,19 @@ public class PaletaColors {
 		for (int i = 1; i < this.paleta.length - 1; i++) {
 			switch (i) {
 			case 1:
-				deltaR = (this.paleta[85].getRed() - this.paleta[0].getRed()) / 85;
-				deltaG = (this.paleta[85].getGreen() - this.paleta[0].getGreen()) / 85;
-				deltaB = (this.paleta[85].getBlue() - this.paleta[0].getBlue()) / 85;
+				deltaR = (int) ((this.paleta[85].getRed() - this.paleta[0].getRed()) / 85.);
+				deltaG = (int) ((this.paleta[85].getGreen() - this.paleta[0].getGreen()) / 85.);
+				deltaB = (int) ((this.paleta[85].getBlue() - this.paleta[0].getBlue()) / 85.);
 				break;
 			case 86:
-				deltaR = (this.paleta[170].getRed() - this.paleta[85].getRed()) / 85;
-				deltaG = (this.paleta[170].getGreen() - this.paleta[85].getGreen()) / 85;
-				deltaB = (this.paleta[170].getBlue() - this.paleta[85].getBlue()) / 85;
+				deltaR = (int) ((this.paleta[170].getRed() - this.paleta[85].getRed()) / 85.);
+				deltaG = (int) ((this.paleta[170].getGreen() - this.paleta[85].getGreen()) / 85.);
+				deltaB = (int) ((this.paleta[170].getBlue() - this.paleta[85].getBlue()) / 85.);
 				break;
 			case 171:
-				deltaR = (this.paleta[255].getRed() - this.paleta[170].getRed()) / 85;
-				deltaG = (this.paleta[255].getGreen() - this.paleta[170].getGreen()) / 85;
-				deltaB = (this.paleta[255].getBlue() - this.paleta[170].getBlue()) / 85;
+				deltaR = (int) ((this.paleta[255].getRed() - this.paleta[170].getRed()) / 85.);
+				deltaG = (int) ((this.paleta[255].getGreen() - this.paleta[170].getGreen()) / 85.);
+				deltaB = (int) ((this.paleta[255].getBlue() - this.paleta[170].getBlue()) / 85.);
 				break;
 			}
 			

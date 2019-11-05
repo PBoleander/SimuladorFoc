@@ -18,7 +18,7 @@ public class Foc extends BufferedImage {
 		super(cm, wr, isRasterPremultiplied, properties);
 		this.arrayBytes = ((DataBufferByte) this.getRaster().getDataBuffer()).getData();
 		this.numCanals = (this.getColorModel().hasAlpha() ? 4 : 3);
-		PaletaColors pc = new PaletaColors(new Color(0, 0, 0), new Color(99, 0, 0), new Color(170, 100, 0), new Color(255, 255, 255));
+		PaletaColors pc = new PaletaColors(new Color(0, 0, 0), new Color(100, 30, 0), new Color(170, 50, 30), new Color(255, 70, 50));
 		this.paleta = pc.getPaleta();
 		inicialitzarMatriuT();
 	}
@@ -27,16 +27,18 @@ public class Foc extends BufferedImage {
 		for (int fila = 0; fila < this.getHeight() - 1; fila++) {
 			for (int columna = 1; columna < this.getWidth() - 1; columna++) {
 				this.matriuTemperatures[fila][columna] = 
-						(this.matriuTemperatures[fila][columna - 1] +
+						(int) ((this.matriuTemperatures[fila][columna - 1] +
 						this.matriuTemperatures[fila][columna] +
 						this.matriuTemperatures[fila][columna + 1] +
 						this.matriuTemperatures[fila + 1][columna - 1] +
 						this.matriuTemperatures[fila + 1][columna] +
-						this.matriuTemperatures[fila + 1][columna + 1]) / 6;
+						this.matriuTemperatures[fila + 1][columna + 1]) / 5.95);
+				this.matriuTemperatures[fila][columna] = (this.matriuTemperatures[fila][columna] > 255 ? 255 : this.matriuTemperatures[fila][columna]);
 			}
 		}
 		
 		colorejarImatge();
+		generarXispes();
 	}
 	
 	private void colorejarImatge() {
@@ -44,6 +46,12 @@ public class Foc extends BufferedImage {
 			for (int columna = 0; columna < this.getWidth(); columna++) {
 				setColorPixel(this.arrayBytes, columna, fila, this.paleta[this.matriuTemperatures[fila][columna]]);
 			}
+		}
+	}
+	
+	private void generarXispes() {
+		for (int columna = 0; columna < this.getWidth(); columna++) {
+			this.matriuTemperatures[this.getHeight() - 1][columna] = ((int) (2 * Math.random()) == 0 ? 255 : 0);
 		}
 	}
 	
@@ -55,9 +63,7 @@ public class Foc extends BufferedImage {
 				this.matriuTemperatures[fila][columna] = 0;
 			}
 		}
-		for (int columna = 0; columna < this.getWidth(); columna++) {
-			this.matriuTemperatures[this.getHeight() - 1][columna] = ((int) (2 * Math.random()) == 0 ? 255 : 0);
-		}
+		generarXispes();
 	}
 	
 	private int passarXYAIndexArray(int x, int y) {

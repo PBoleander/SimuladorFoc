@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.TimeUnit;
 
 public class Viewer extends Canvas {
 	
@@ -25,6 +26,12 @@ public class Viewer extends Canvas {
 	public void paint(Graphics g) {
 		f.actualitzarMatriuT();
 		g.drawImage(f, 0, 0, this.getWidth(), this.getHeight(), Color.BLACK, null);
-		repaint(0, this.getHeight() - 10, this.getWidth(), 10);
+		try {
+			TimeUnit.MILLISECONDS.sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		repaint();
 	}
 }
