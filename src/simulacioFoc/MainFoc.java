@@ -24,7 +24,7 @@ public class MainFoc extends JFrame {
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
-		this.setMinimumSize(new Dimension(300, 300));
+		this.setMinimumSize(new Dimension(300, 200));
 		this.setLayout(new GridBagLayout());
 		
 		GridBagConstraints c = new GridBagConstraints();

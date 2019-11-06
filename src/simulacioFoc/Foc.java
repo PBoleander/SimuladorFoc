@@ -17,7 +17,7 @@ public class Foc extends BufferedImage {
 		super(ample, alt, tipus);
 		this.numCanals = (this.getColorModel().hasAlpha() ? 4 : 3);
 		this.arrayBytes = new byte[ample * alt * this.numCanals];
-		PaletaColors pc = new PaletaColors(new Color(0, 0, 0), new Color(255, 230, 50), new Color(255, 180, 100), new Color(255, 150, 150));
+		PaletaColors pc = new PaletaColors(new Color(0, 0, 0), new Color(255, 210, 50), new Color(255, 180, 100), new Color(255, 150, 150));
 		this.paleta = pc.getPaleta();
 		inicialitzarMatriuT();
 	}
@@ -26,12 +26,12 @@ public class Foc extends BufferedImage {
 		for (int fila = this.getHeight() - 2; fila >= 0; fila--) {
 			for (int columna = 1; columna < this.getWidth() - 1; columna++) {
 				this.matriuTemperatures[fila][columna] = 
-						(int) ((this.matriuTemperatures[fila][columna - 1] +
-						this.matriuTemperatures[fila][columna] +
-						this.matriuTemperatures[fila][columna + 1] +
-						this.matriuTemperatures[fila + 1][columna - 1] +
-						this.matriuTemperatures[fila + 1][columna] +
-						this.matriuTemperatures[fila + 1][columna + 1]) / 6.1);
+						(int) ((this.matriuTemperatures[fila][columna - 1] * 0.8 +
+						this.matriuTemperatures[fila][columna] * 1.2 +
+						this.matriuTemperatures[fila][columna + 1] * 0.8 +
+						this.matriuTemperatures[fila + 1][columna - 1] * 0.8 +
+						this.matriuTemperatures[fila + 1][columna] * 0.8 +
+						this.matriuTemperatures[fila + 1][columna + 1] * 0.8) / 5.3);
 				this.matriuTemperatures[fila][columna] = (this.matriuTemperatures[fila][columna] > 255 ? 255 : this.matriuTemperatures[fila][columna]);
 			}
 		}
@@ -42,7 +42,7 @@ public class Foc extends BufferedImage {
 	}
 	
 	public Foc getFoc() {
-		this.setData(Raster.createRaster(this.getSampleModel(), new DataBufferByte(this.arrayBytes, this.arrayBytes.length), new Point() ) );
+		this.setData(Raster.createRaster(this.getSampleModel(), new DataBufferByte(this.arrayBytes, this.arrayBytes.length), new Point()));
 		return this;
 	}
 	
@@ -82,9 +82,11 @@ public class Foc extends BufferedImage {
 		ba[i + 1] = (byte) c.getGreen();
 		ba[i + 2] = (byte) c.getRed();
 		
-		if (this.numCanals == 4) {
-			if (this.matriuTemperatures[y][x] < 50)
-				ba[i - 1] = (byte) 50;
+		if (this.numCanals == 4) { // transparències
+			if (this.matriuTemperatures[y][x] < 85)
+				ba[i - 1] = (byte) 75;
+			else if (this.matriuTemperatures[y][x] < 150)
+				ba[i - 1] = (byte) 175;
 			else
 				ba[i - 1] = (byte) 255;
 		}
