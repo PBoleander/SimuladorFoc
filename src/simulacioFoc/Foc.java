@@ -16,7 +16,7 @@ public class Foc extends BufferedImage {
 	private int[][] matriuTemperatures;
 	private byte[] matriuBordes;
 	private Color[] paleta;
-	private boolean bordes;
+	private boolean xispesABordes;
 	
 	public Foc(int ample, int alt, int tipus, BufferedImage i) {
 		super(ample, alt, tipus);
@@ -28,7 +28,8 @@ public class Foc extends BufferedImage {
 		this.matriuBordes = new byte[this.arrayBytesImatgeFons.length];
 		PaletaColors pc = new PaletaColors(new Color(0, 0, 0), new Color(255, 230, 205), new Color(255, 180, 50), new Color(255, 255, 255));
 		this.paleta = pc.getPaleta();
-		this.bordes = false;
+		this.xispesABordes = false;
+		
 		inicialitzarMatriuT();
 		generarXispes(true);
 	}
@@ -44,6 +45,7 @@ public class Foc extends BufferedImage {
 							this.matriuTemperatures[fila + 1][columna - 1] * 0.8 +
 							this.matriuTemperatures[fila + 1][columna] +
 							this.matriuTemperatures[fila + 1][columna + 1] * 0.8) / 5.55);
+					
 					this.matriuTemperatures[fila][columna] = (this.matriuTemperatures[fila][columna] > 255 ? 255 : this.matriuTemperatures[fila][columna]);
 				}
 			}
@@ -59,8 +61,8 @@ public class Foc extends BufferedImage {
 		return this;
 	}
 	
-	public void setBordes(boolean bordes) {
-		this.bordes = bordes;
+	public void setXispesABordes(boolean bordes) {
+		this.xispesABordes = bordes;
 		inicialitzarMatriuT();
 		generarXispes(true);
 	}
@@ -86,7 +88,7 @@ public class Foc extends BufferedImage {
 	}
 	
 	private boolean costatsEncesos(int fila, int columna) {
-		if (this.bordes)
+		if (this.xispesABordes)
 			return ((this.matriuTemperatures[fila - 1][columna - 1] > 0 || this.matriuTemperatures[fila - 1][columna] > 0 ||
 					 this.matriuTemperatures[fila - 1][columna + 1] > 0 || this.matriuTemperatures[fila][columna - 1] > 0 ||
 					 this.matriuTemperatures[fila][columna + 1] > 0 || this.matriuTemperatures[fila + 1][columna - 1] > 0 ||
@@ -119,11 +121,11 @@ public class Foc extends BufferedImage {
 	}
 	
 	private void generarXispes(boolean inici) {
-		if (inici && this.bordes)
+		if (inici && this.xispesABordes)
 			detectarBordes();
 		
 		int filaInici, filaFi;
-		if (this.bordes) {
+		if (this.xispesABordes) {
 			filaInici = 1;
 			filaFi = this.getHeight() - 1;
 		} else {
@@ -159,11 +161,11 @@ public class Foc extends BufferedImage {
 	private void recorrerFila(int fila, boolean inici) {
 		boolean generarXispaAqui;
 		
-		if (this.bordes) generarXispaAqui = false;
+		if (this.xispesABordes) generarXispaAqui = false;
 		else generarXispaAqui = true;
 		
 		for (int columna = 1; columna < this.getWidth() - 1; columna++) {
-			if (this.bordes) {
+			if (this.xispesABordes) {
 				Color c = getColorPixel(this.matriuBordes, this.nCanalsImgFons, columna, fila);
 				if (c.getBlue() + c.getGreen() + c.getRed() > 50) {
 					generarXispaAqui = true;
@@ -175,7 +177,7 @@ public class Foc extends BufferedImage {
 				else
 					this.matriuTemperatures[fila][columna] = ((int) (4 * Math.random()) != 0 ? 255 : 0);
 				
-				if (this.bordes) generarXispaAqui = false;
+				if (this.xispesABordes) generarXispaAqui = false;
 			}
 		}
 	}
