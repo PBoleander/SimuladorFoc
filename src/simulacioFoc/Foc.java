@@ -9,14 +9,20 @@ import java.awt.image.Raster;
 public class Foc extends BufferedImage {
 	
 	private int numCanals;
-	private byte[] arrayBytes;
+	private byte[] arrayBytesFoc;
+	private BufferedImage imatgeFons;
+	private byte[] arrayBytesImatgeFons;
 	private int[][] matriuTemperatures;
+	private byte[] matriuBordes;
 	private Color[] paleta;
 	
-	public Foc(int ample, int alt, int tipus) {
+	public Foc(int ample, int alt, int tipus, BufferedImage i) {
 		super(ample, alt, tipus);
+		this.imatgeFons = i;
+		this.arrayBytesImatgeFons = ((DataBufferByte) this.imatgeFons.getRaster().getDataBuffer()).getData();
 		this.numCanals = (this.getColorModel().hasAlpha() ? 4 : 3);
-		this.arrayBytes = new byte[ample * alt * this.numCanals];
+		this.arrayBytesFoc = new byte[ample * alt * this.numCanals];
+		this.matriuBordes = new byte[this.arrayBytesImatgeFons.length];
 		PaletaColors pc = new PaletaColors(new Color(0, 0, 0), new Color(255, 230, 205), new Color(255, 180, 50), new Color(255, 255, 255));
 		this.paleta = pc.getPaleta();
 		inicialitzarMatriuT();
@@ -26,14 +32,16 @@ public class Foc extends BufferedImage {
 	public void actualitzarMatriuT(boolean generarXispes) {
 		for (int fila = this.getHeight() - 2; fila >= 0; fila--) {
 			for (int columna = 1; columna < this.getWidth() - 1; columna++) {
-				this.matriuTemperatures[fila][columna] = 
-						(int) ((this.matriuTemperatures[fila][columna - 1] * 0.8 +
-						this.matriuTemperatures[fila][columna] * 1.2 +
-						this.matriuTemperatures[fila][columna + 1] * 0.8 +
-						this.matriuTemperatures[fila + 1][columna - 1] * 0.8 +
-						this.matriuTemperatures[fila + 1][columna] +
-						this.matriuTemperatures[fila + 1][columna + 1] * 0.8) / 5.5);
-				this.matriuTemperatures[fila][columna] = (this.matriuTemperatures[fila][columna] > 255 ? 255 : this.matriuTemperatures[fila][columna]);
+				if (this.matriuTemperatures[fila][columna] != 255) {
+					this.matriuTemperatures[fila][columna] = 
+							(int) ((this.matriuTemperatures[fila][columna - 1] * 0.8 +
+							this.matriuTemperatures[fila][columna] * 1.2 +
+							this.matriuTemperatures[fila][columna + 1] * 0.8 +
+							this.matriuTemperatures[fila + 1][columna - 1] * 0.8 +
+							this.matriuTemperatures[fila + 1][columna] +
+							this.matriuTemperatures[fila + 1][columna + 1] * 0.8) / 5.55);
+					this.matriuTemperatures[fila][columna] = (this.matriuTemperatures[fila][columna] > 255 ? 255 : this.matriuTemperatures[fila][columna]);
+				}
 			}
 		}
 		
@@ -43,35 +51,81 @@ public class Foc extends BufferedImage {
 	}
 	
 	public Foc getFoc() {
-		this.setData(Raster.createRaster(this.getSampleModel(), new DataBufferByte(this.arrayBytes, this.arrayBytes.length), new Point()));
+		this.setData(Raster.createRaster(this.getSampleModel(), new DataBufferByte(this.arrayBytesFoc, this.arrayBytesFoc.length), new Point()));
 		return this;
 	}
 	
 	private void colorejarImatge() {
 		for (int fila = 0; fila < this.getHeight(); fila++) {
 			for (int columna = 0; columna < this.getWidth(); columna++) {
-				setColorPixel(this.arrayBytes, columna, fila, this.paleta[this.matriuTemperatures[fila][columna]]);
+				setColorPixel(this.arrayBytesFoc, columna, fila, this.paleta[this.matriuTemperatures[fila][columna]]);
 			}
 		}
 	}
 	
-	private boolean costatsEncesos(int columna) {
-		if (columna == 0)
-			return (this.matriuTemperatures[this.getHeight() - 1][columna + 1] == 255 ? true : false);
-		else if (columna == this.getWidth() - 1)
-			return (this.matriuTemperatures[this.getHeight() - 1][columna - 1] == 255 ? true : false);
-		else
-			return ((this.matriuTemperatures[this.getHeight() - 1][columna + 1] == 255 ||
-					this.matriuTemperatures[this.getHeight() - 1][columna - 1] == 255) ? true : false);
+	private Color corregirColor(int r, int g, int b) {
+		r = (r > 255 ? 255 : r);
+		g = (g > 255 ? 255 : g);
+		b = (b > 255 ? 255 : b);
+		
+		r = (r < 0 ? 0 : r);
+		g = (g < 0 ? 0 : g);
+		b = (b < 0 ? 0 : b);
+		
+		return new Color(r, g, b);
+	}
+	
+	private boolean costatsEncesos(int fila, int columna) {
+		return ((this.matriuTemperatures[fila - 1][columna - 1] > 0 || this.matriuTemperatures[fila - 1][columna] > 0 ||
+				 this.matriuTemperatures[fila - 1][columna + 1] > 0 || this.matriuTemperatures[fila][columna - 1] > 0 ||
+				 this.matriuTemperatures[fila][columna + 1] > 0 || this.matriuTemperatures[fila + 1][columna - 1] > 0 ||
+				 this.matriuTemperatures[fila + 1][columna] > 0 || this.matriuTemperatures[fila + 1][columna + 1] > 0) ? true : false);
+	}
+	
+	private void detectarBordes() {
+		int[][] matriu = {{0, 1, 0}, {1, -4, 1}, {0, 1, 0}};
+		int nouR, nouG, nouB;
+		
+		for (int filaFons = 1; filaFons < this.imatgeFons.getHeight() - 1; filaFons++) {
+			for (int columnaFons = 1; columnaFons < this.imatgeFons.getWidth() - 1; columnaFons++) {
+				nouR = nouG = nouB = 0;
+				
+				for (int filaMatriu = 0; filaMatriu < 3; filaMatriu++) {
+					for (int columnaMatriu = 0; columnaMatriu < 3; columnaMatriu++) {
+						Color c = getColorPixel(this.arrayBytesImatgeFons, columnaFons + columnaMatriu - 1, filaFons + filaMatriu - 1);
+						
+						nouR += matriu[filaMatriu][columnaMatriu] * c.getRed();
+						nouG += matriu[filaMatriu][columnaMatriu] * c.getGreen();
+						nouB += matriu[filaMatriu][columnaMatriu] * c.getBlue();
+					}
+				}
+				
+				setColorPixel(matriuBordes, columnaFons, filaFons, corregirColor(nouR, nouG, nouB));
+			}
+		}
 	}
 	
 	private void generarXispes(boolean inici) {
-		for (int columna = 0; columna < this.getWidth(); columna++) {
-			if (inici || !costatsEncesos(columna))
-				this.matriuTemperatures[this.getHeight() - 1][columna] = ((int) (2 * Math.random()) == 0 ? 255 : 0);
-			else
-				this.matriuTemperatures[this.getHeight() - 1][columna] = ((int) (4 * Math.random()) != 0 ? 255 : 0);
+		if (inici)
+			detectarBordes();
+		for (int fila = 1; fila < this.getHeight() - 1; fila++) {
+			for (int columna = 1; columna < this.getWidth() - 1; columna++) {
+				Color c = getColorPixel(this.matriuBordes, columna, fila);
+				if (c.getBlue() == 0 && c.getGreen() == 0 && c.getRed() == 0);
+				else {
+					if (inici || !costatsEncesos(fila, columna))
+						this.matriuTemperatures[fila][columna] = ((int) (2 * Math.random()) == 0 ? 255 : 0);
+					else
+						this.matriuTemperatures[fila][columna] = ((int) (4 * Math.random()) != 0 ? 255 : 0);
+				}
+			}
 		}
+	}
+	
+	private Color getColorPixel(byte[] ba, int x, int y) {
+		int i = passarXYAIndexArray(x, y);
+		
+		return new Color(Byte.toUnsignedInt(ba[i + 2]), Byte.toUnsignedInt(ba[i + 1]), Byte.toUnsignedInt(ba[i]));
 	}
 	
 	private void inicialitzarMatriuT() {

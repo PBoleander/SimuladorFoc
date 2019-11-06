@@ -20,7 +20,7 @@ public class Viewer extends Canvas {
 	public Viewer(Image i) {
 		super();
 		this.img = (BufferedImage) i;
-		this.f = new Foc(300, 100, BufferedImage.TYPE_4BYTE_ABGR);
+		this.f = new Foc(img.getWidth(), img.getHeight(), BufferedImage.TYPE_4BYTE_ABGR, img);
 		this.numRepaint = 0;
 	}
 
