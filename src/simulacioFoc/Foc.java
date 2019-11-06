@@ -165,7 +165,7 @@ public class Foc extends BufferedImage {
 		for (int columna = 1; columna < this.getWidth() - 1; columna++) {
 			if (this.bordes) {
 				Color c = getColorPixel(this.matriuBordes, this.nCanalsImgFons, columna, fila);
-				if (c.getBlue() != 0 || c.getGreen() != 0 || c.getRed() != 0) {
+				if (c.getBlue() + c.getGreen() + c.getRed() > 50) {
 					generarXispaAqui = true;
 				}	
 			}
