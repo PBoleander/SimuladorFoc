@@ -10,7 +10,6 @@ public class Foc extends BufferedImage {
 	
 	private int numCanals;
 	private byte[] arrayBytesFoc;
-	private BufferedImage imatgeFons;
 	private byte[] arrayBytesImatgeFons;
 	private int[][] matriuTemperatures;
 	private byte[] matriuBordes;
@@ -18,8 +17,7 @@ public class Foc extends BufferedImage {
 	
 	public Foc(int ample, int alt, int tipus, BufferedImage i) {
 		super(ample, alt, tipus);
-		this.imatgeFons = i;
-		this.arrayBytesImatgeFons = ((DataBufferByte) this.imatgeFons.getRaster().getDataBuffer()).getData();
+		this.arrayBytesImatgeFons = ((DataBufferByte) i.getRaster().getDataBuffer()).getData();
 		this.numCanals = (this.getColorModel().hasAlpha() ? 4 : 3);
 		this.arrayBytesFoc = new byte[ample * alt * this.numCanals];
 		this.matriuBordes = new byte[this.arrayBytesImatgeFons.length];
@@ -86,8 +84,8 @@ public class Foc extends BufferedImage {
 		int[][] matriu = {{0, 1, 0}, {1, -4, 1}, {0, 1, 0}};
 		int nouR, nouG, nouB;
 		
-		for (int filaFons = 1; filaFons < this.imatgeFons.getHeight() - 1; filaFons++) {
-			for (int columnaFons = 1; columnaFons < this.imatgeFons.getWidth() - 1; columnaFons++) {
+		for (int filaFons = 1; filaFons < this.getHeight() - 1; filaFons++) {
+			for (int columnaFons = 1; columnaFons < this.getWidth() - 1; columnaFons++) {
 				nouR = nouG = nouB = 0;
 				
 				for (int filaMatriu = 0; filaMatriu < 3; filaMatriu++) {
