@@ -23,6 +23,10 @@ public class Viewer extends Canvas {
 		this.f = new Foc(img.getWidth(), img.getHeight(), BufferedImage.TYPE_4BYTE_ABGR, img);
 		this.numRepaint = 0;
 	}
+	
+	public Foc getFoc() {
+		return this.f;
+	}
 
 	@Override
 	public void paint(Graphics g) {

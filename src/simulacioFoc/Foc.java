@@ -14,6 +14,7 @@ public class Foc extends BufferedImage {
 	private int[][] matriuTemperatures;
 	private byte[] matriuBordes;
 	private Color[] paleta;
+	private boolean bordes;
 	
 	public Foc(int ample, int alt, int tipus, BufferedImage i) {
 		super(ample, alt, tipus);
@@ -23,6 +24,7 @@ public class Foc extends BufferedImage {
 		this.matriuBordes = new byte[this.arrayBytesImatgeFons.length];
 		PaletaColors pc = new PaletaColors(new Color(0, 0, 0), new Color(255, 230, 205), new Color(255, 180, 50), new Color(255, 255, 255));
 		this.paleta = pc.getPaleta();
+		this.bordes = false;
 		inicialitzarMatriuT();
 		generarXispes(true);
 	}
@@ -51,6 +53,12 @@ public class Foc extends BufferedImage {
 	public Foc getFoc() {
 		this.setData(Raster.createRaster(this.getSampleModel(), new DataBufferByte(this.arrayBytesFoc, this.arrayBytesFoc.length), new Point()));
 		return this;
+	}
+	
+	public void setBordes(boolean bordes) {
+		this.bordes = bordes;
+		inicialitzarMatriuT();
+		generarXispes(true);
 	}
 	
 	private void colorejarImatge() {
@@ -104,19 +112,20 @@ public class Foc extends BufferedImage {
 	}
 	
 	private void generarXispes(boolean inici) {
-		if (inici)
+		if (inici && this.bordes)
 			detectarBordes();
-		for (int fila = 1; fila < this.getHeight() - 1; fila++) {
-			for (int columna = 1; columna < this.getWidth() - 1; columna++) {
-				Color c = getColorPixel(this.matriuBordes, columna, fila);
-				if (c.getBlue() == 0 && c.getGreen() == 0 && c.getRed() == 0);
-				else {
-					if (inici || !costatsEncesos(fila, columna))
-						this.matriuTemperatures[fila][columna] = ((int) (2 * Math.random()) == 0 ? 255 : 0);
-					else
-						this.matriuTemperatures[fila][columna] = ((int) (4 * Math.random()) != 0 ? 255 : 0);
-				}
-			}
+		
+		int filaInici, filaFi;
+		if (this.bordes) {
+			filaInici = 1;
+			filaFi = this.getHeight() - 1;
+		} else {
+			filaInici = this.getHeight() - 1;
+			filaFi = this.getHeight();
+		}
+		
+		for (int fila = filaInici; fila < filaFi; fila++) {
+			recorrerFila(fila, inici);
 		}
 	}
 	
@@ -138,6 +147,30 @@ public class Foc extends BufferedImage {
 	
 	private int passarXYAIndexArray(int x, int y) {
 		return this.numCanals * (y * this.getWidth() + x) + this.numCanals - 3; // this.numCanals - 3 = offset per si hi ha canal alfa
+	}
+	
+	private void recorrerFila(int fila, boolean inici) {
+		boolean generarXispaAqui;
+		
+		if (this.bordes) generarXispaAqui = false;
+		else generarXispaAqui = true;
+		
+		for (int columna = 1; columna < this.getWidth() - 1; columna++) {
+			if (this.bordes) {
+				Color c = getColorPixel(this.matriuBordes, columna, fila);
+				if (c.getBlue() != 0 || c.getGreen() != 0 || c.getRed() != 0) {
+					generarXispaAqui = true;
+				}	
+			}
+			if (generarXispaAqui) {
+				if (inici || !costatsEncesos(fila, columna))
+					this.matriuTemperatures[fila][columna] = ((int) (2 * Math.random()) == 0 ? 255 : 0);
+				else
+					this.matriuTemperatures[fila][columna] = ((int) (4 * Math.random()) != 0 ? 255 : 0);
+				
+				if (this.bordes) generarXispaAqui = false;
+			}
+		}
 	}
 	
 	private void setColorPixel(byte[] ba, int x, int y, Color c) {
