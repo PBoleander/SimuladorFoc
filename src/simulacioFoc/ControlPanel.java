@@ -23,18 +23,10 @@ public class ControlPanel extends JPanel implements MouseListener {
 		}
 	}
 	
-	public void mouseReleased(MouseEvent e) {
-		
-	}
-	public void mouseEntered(MouseEvent e) {
-		
-	}
-	public void mouseExited(MouseEvent e) {
-		
-	}
-	public void mousePressed(MouseEvent e) {
-		
-	}
+	public void mouseReleased(MouseEvent e) {}
+	public void mouseEntered(MouseEvent e) {}
+	public void mouseExited(MouseEvent e) {}
+	public void mousePressed(MouseEvent e) {}
 	
 	public ControlPanel(Viewer v) {
 		super(new GridBagLayout());

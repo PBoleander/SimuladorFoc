@@ -10,7 +10,9 @@ public class Foc extends BufferedImage {
 	
 	private int numCanals;
 	private byte[] arrayBytesFoc;
+	private BufferedImage imatgeFons;
 	private byte[] arrayBytesImatgeFons;
+	private int nCanalsImgFons;
 	private int[][] matriuTemperatures;
 	private byte[] matriuBordes;
 	private Color[] paleta;
@@ -18,7 +20,9 @@ public class Foc extends BufferedImage {
 	
 	public Foc(int ample, int alt, int tipus, BufferedImage i) {
 		super(ample, alt, tipus);
-		this.arrayBytesImatgeFons = ((DataBufferByte) i.getRaster().getDataBuffer()).getData();
+		this.imatgeFons = i;
+		this.nCanalsImgFons = this.imatgeFons.getColorModel().hasAlpha() ? 4 : 3;
+		this.arrayBytesImatgeFons = ((DataBufferByte) this.imatgeFons.getRaster().getDataBuffer()).getData();
 		this.numCanals = (this.getColorModel().hasAlpha() ? 4 : 3);
 		this.arrayBytesFoc = new byte[ample * alt * this.numCanals];
 		this.matriuBordes = new byte[this.arrayBytesImatgeFons.length];
@@ -64,7 +68,7 @@ public class Foc extends BufferedImage {
 	private void colorejarImatge() {
 		for (int fila = 0; fila < this.getHeight(); fila++) {
 			for (int columna = 0; columna < this.getWidth(); columna++) {
-				setColorPixel(this.arrayBytesFoc, columna, fila, this.paleta[this.matriuTemperatures[fila][columna]]);
+				setColorPixel(this.arrayBytesFoc, this.numCanals, columna, fila, this.paleta[this.matriuTemperatures[fila][columna]]);
 			}
 		}
 	}
@@ -82,10 +86,13 @@ public class Foc extends BufferedImage {
 	}
 	
 	private boolean costatsEncesos(int fila, int columna) {
-		return ((this.matriuTemperatures[fila - 1][columna - 1] > 0 || this.matriuTemperatures[fila - 1][columna] > 0 ||
-				 this.matriuTemperatures[fila - 1][columna + 1] > 0 || this.matriuTemperatures[fila][columna - 1] > 0 ||
-				 this.matriuTemperatures[fila][columna + 1] > 0 || this.matriuTemperatures[fila + 1][columna - 1] > 0 ||
-				 this.matriuTemperatures[fila + 1][columna] > 0 || this.matriuTemperatures[fila + 1][columna + 1] > 0) ? true : false);
+		if (this.bordes)
+			return ((this.matriuTemperatures[fila - 1][columna - 1] > 0 || this.matriuTemperatures[fila - 1][columna] > 0 ||
+					 this.matriuTemperatures[fila - 1][columna + 1] > 0 || this.matriuTemperatures[fila][columna - 1] > 0 ||
+					 this.matriuTemperatures[fila][columna + 1] > 0 || this.matriuTemperatures[fila + 1][columna - 1] > 0 ||
+					 this.matriuTemperatures[fila + 1][columna] > 0 || this.matriuTemperatures[fila + 1][columna + 1] > 0) ? true : false);
+		else
+			return this.matriuTemperatures[fila][columna - 1] > 0 || this.matriuTemperatures[fila][columna + 1] > 0 ? true : false;
 	}
 	
 	private void detectarBordes() {
@@ -98,7 +105,7 @@ public class Foc extends BufferedImage {
 				
 				for (int filaMatriu = 0; filaMatriu < 3; filaMatriu++) {
 					for (int columnaMatriu = 0; columnaMatriu < 3; columnaMatriu++) {
-						Color c = getColorPixel(this.arrayBytesImatgeFons, columnaFons + columnaMatriu - 1, filaFons + filaMatriu - 1);
+						Color c = getColorPixel(this.arrayBytesImatgeFons, this.nCanalsImgFons, columnaFons + columnaMatriu - 1, filaFons + filaMatriu - 1);
 						
 						nouR += matriu[filaMatriu][columnaMatriu] * c.getRed();
 						nouG += matriu[filaMatriu][columnaMatriu] * c.getGreen();
@@ -106,7 +113,7 @@ public class Foc extends BufferedImage {
 					}
 				}
 				
-				setColorPixel(matriuBordes, columnaFons, filaFons, corregirColor(nouR, nouG, nouB));
+				setColorPixel(matriuBordes, this.nCanalsImgFons, columnaFons, filaFons, corregirColor(nouR, nouG, nouB));
 			}
 		}
 	}
@@ -129,8 +136,8 @@ public class Foc extends BufferedImage {
 		}
 	}
 	
-	private Color getColorPixel(byte[] ba, int x, int y) {
-		int i = passarXYAIndexArray(x, y);
+	private Color getColorPixel(byte[] ba, int numCanalsImatge, int x, int y) {
+		int i = passarXYAIndexArray(x, y, numCanalsImatge);
 		
 		return new Color(Byte.toUnsignedInt(ba[i + 2]), Byte.toUnsignedInt(ba[i + 1]), Byte.toUnsignedInt(ba[i]));
 	}
@@ -145,8 +152,8 @@ public class Foc extends BufferedImage {
 		}
 	}
 	
-	private int passarXYAIndexArray(int x, int y) {
-		return this.numCanals * (y * this.getWidth() + x) + this.numCanals - 3; // this.numCanals - 3 = offset per si hi ha canal alfa
+	private int passarXYAIndexArray(int x, int y, int nCanals) {
+		return nCanals * (y * this.getWidth() + x) + nCanals - 3; // this.numCanals - 3 = offset per si hi ha canal alfa
 	}
 	
 	private void recorrerFila(int fila, boolean inici) {
@@ -157,7 +164,7 @@ public class Foc extends BufferedImage {
 		
 		for (int columna = 1; columna < this.getWidth() - 1; columna++) {
 			if (this.bordes) {
-				Color c = getColorPixel(this.matriuBordes, columna, fila);
+				Color c = getColorPixel(this.matriuBordes, this.nCanalsImgFons, columna, fila);
 				if (c.getBlue() != 0 || c.getGreen() != 0 || c.getRed() != 0) {
 					generarXispaAqui = true;
 				}	
@@ -173,8 +180,8 @@ public class Foc extends BufferedImage {
 		}
 	}
 	
-	private void setColorPixel(byte[] ba, int x, int y, Color c) {
-		int i = passarXYAIndexArray(x, y);
+	private void setColorPixel(byte[] ba, int numCanalsImg, int x, int y, Color c) {
+		int i = passarXYAIndexArray(x, y, numCanalsImg);
 		
 		ba[i] = (byte) c.getBlue();
 		ba[i + 1] = (byte) c.getGreen();

@@ -48,7 +48,7 @@ public class MainFoc extends JFrame {
 	}
 
 	public static void main(String[] args) throws IOException {
-		Image imatge = ImageIO.read(new File("/home/oleander/Imágenes/ImatgePerFocJava.png"));
+		Image imatge = ImageIO.read(new File("/home/oleander/Imágenes/Fondos/sunset_in_rome-wallpaper-1366x768.jpg"));
 		new MainFoc(imatge);
 	}
 
