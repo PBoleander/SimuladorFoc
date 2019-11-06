@@ -26,9 +26,6 @@ public class Viewer extends Canvas {
 
 	@Override
 	public void paint(Graphics g) {
-		boolean xispa;
-		xispa = (numRepaint % 5 == 0 ? true : false);
-		f.actualitzarMatriuT(xispa);
 		g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), Color.BLACK, null);
 		g.drawImage(f.getFoc(), 0, 0, this.getWidth(), this.getHeight(), null, null);
 		try {
@@ -37,6 +34,8 @@ public class Viewer extends Canvas {
 			e.printStackTrace();
 		}
 		numRepaint++;
+		boolean actualitzarXispa = (numRepaint % 10 == 0 ? true : false);
+		f.actualitzarMatriuT(actualitzarXispa);
 		repaint();
 	}
 }

@@ -17,9 +17,10 @@ public class Foc extends BufferedImage {
 		super(ample, alt, tipus);
 		this.numCanals = (this.getColorModel().hasAlpha() ? 4 : 3);
 		this.arrayBytes = new byte[ample * alt * this.numCanals];
-		PaletaColors pc = new PaletaColors(new Color(0, 0, 0), new Color(255, 210, 50), new Color(255, 180, 100), new Color(255, 150, 150));
+		PaletaColors pc = new PaletaColors(new Color(0, 0, 0), new Color(255, 230, 205), new Color(255, 180, 50), new Color(255, 255, 255));
 		this.paleta = pc.getPaleta();
 		inicialitzarMatriuT();
+		generarXispes(true);
 	}
 	
 	public void actualitzarMatriuT(boolean generarXispes) {
@@ -30,15 +31,15 @@ public class Foc extends BufferedImage {
 						this.matriuTemperatures[fila][columna] * 1.2 +
 						this.matriuTemperatures[fila][columna + 1] * 0.8 +
 						this.matriuTemperatures[fila + 1][columna - 1] * 0.8 +
-						this.matriuTemperatures[fila + 1][columna] * 0.8 +
-						this.matriuTemperatures[fila + 1][columna + 1] * 0.8) / 5.3);
+						this.matriuTemperatures[fila + 1][columna] +
+						this.matriuTemperatures[fila + 1][columna + 1] * 0.8) / 5.5);
 				this.matriuTemperatures[fila][columna] = (this.matriuTemperatures[fila][columna] > 255 ? 255 : this.matriuTemperatures[fila][columna]);
 			}
 		}
 		
 		colorejarImatge();
 		if (generarXispes)
-			generarXispes();
+			generarXispes(false);
 	}
 	
 	public Foc getFoc() {
@@ -54,9 +55,22 @@ public class Foc extends BufferedImage {
 		}
 	}
 	
-	private void generarXispes() {
+	private boolean costatsEncesos(int columna) {
+		if (columna == 0)
+			return (this.matriuTemperatures[this.getHeight() - 1][columna + 1] == 255 ? true : false);
+		else if (columna == this.getWidth() - 1)
+			return (this.matriuTemperatures[this.getHeight() - 1][columna - 1] == 255 ? true : false);
+		else
+			return ((this.matriuTemperatures[this.getHeight() - 1][columna + 1] == 255 ||
+					this.matriuTemperatures[this.getHeight() - 1][columna - 1] == 255) ? true : false);
+	}
+	
+	private void generarXispes(boolean inici) {
 		for (int columna = 0; columna < this.getWidth(); columna++) {
-			this.matriuTemperatures[this.getHeight() - 1][columna] = ((int) (2 * Math.random()) == 0 ? 255 : 0);
+			if (inici || !costatsEncesos(columna))
+				this.matriuTemperatures[this.getHeight() - 1][columna] = ((int) (2 * Math.random()) == 0 ? 255 : 0);
+			else
+				this.matriuTemperatures[this.getHeight() - 1][columna] = ((int) (4 * Math.random()) != 0 ? 255 : 0);
 		}
 	}
 	
@@ -68,7 +82,6 @@ public class Foc extends BufferedImage {
 				this.matriuTemperatures[fila][columna] = 0;
 			}
 		}
-		generarXispes();
 	}
 	
 	private int passarXYAIndexArray(int x, int y) {
@@ -83,8 +96,8 @@ public class Foc extends BufferedImage {
 		ba[i + 2] = (byte) c.getRed();
 		
 		if (this.numCanals == 4) { // transparències
-			if (this.matriuTemperatures[y][x] < 85)
-				ba[i - 1] = (byte) 75;
+			if (this.matriuTemperatures[y][x] < 100)
+				ba[i - 1] = (byte) 25;
 			else if (this.matriuTemperatures[y][x] < 150)
 				ba[i - 1] = (byte) 175;
 			else
