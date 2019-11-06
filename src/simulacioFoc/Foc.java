@@ -18,13 +18,13 @@ public class Foc extends BufferedImage {
 		super(cm, wr, isRasterPremultiplied, properties);
 		this.arrayBytes = ((DataBufferByte) this.getRaster().getDataBuffer()).getData();
 		this.numCanals = (this.getColorModel().hasAlpha() ? 4 : 3);
-		PaletaColors pc = new PaletaColors(new Color(0, 0, 0), new Color(100, 30, 0), new Color(170, 50, 30), new Color(255, 70, 50));
+		PaletaColors pc = new PaletaColors(new Color(0, 0, 0), new Color(255, 230, 50), new Color(255, 180, 100), new Color(255, 150, 150));
 		this.paleta = pc.getPaleta();
 		inicialitzarMatriuT();
 	}
 	
-	public void actualitzarMatriuT() {
-		for (int fila = 0; fila < this.getHeight() - 1; fila++) {
+	public void actualitzarMatriuT(boolean generarXispes) {
+		for (int fila = this.getHeight() - 2; fila >= 0; fila--) {
 			for (int columna = 1; columna < this.getWidth() - 1; columna++) {
 				this.matriuTemperatures[fila][columna] = 
 						(int) ((this.matriuTemperatures[fila][columna - 1] +
@@ -32,13 +32,14 @@ public class Foc extends BufferedImage {
 						this.matriuTemperatures[fila][columna + 1] +
 						this.matriuTemperatures[fila + 1][columna - 1] +
 						this.matriuTemperatures[fila + 1][columna] +
-						this.matriuTemperatures[fila + 1][columna + 1]) / 5.95);
+						this.matriuTemperatures[fila + 1][columna + 1]) / 6.1);
 				this.matriuTemperatures[fila][columna] = (this.matriuTemperatures[fila][columna] > 255 ? 255 : this.matriuTemperatures[fila][columna]);
 			}
 		}
 		
 		colorejarImatge();
-		generarXispes();
+		if (generarXispes)
+			generarXispes();
 	}
 	
 	private void colorejarImatge() {

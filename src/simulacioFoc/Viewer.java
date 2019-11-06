@@ -15,16 +15,20 @@ public class Viewer extends Canvas {
 	private static final long serialVersionUID = 1L;
 	private BufferedImage img;
 	private Foc f;
+	private int numRepaint;
 	
 	public Viewer(Image i) {
 		super();
 		this.img = (BufferedImage) i;
 		this.f = new Foc(img.getColorModel(), img.copyData(null), img.isAlphaPremultiplied(), null);
+		this.numRepaint = 0;
 	}
 
 	@Override
 	public void paint(Graphics g) {
-		f.actualitzarMatriuT();
+		boolean xispa;
+		xispa = (numRepaint % 5 == 0 ? true : false);
+		f.actualitzarMatriuT(xispa);
 		g.drawImage(f, 0, 0, this.getWidth(), this.getHeight(), Color.BLACK, null);
 		try {
 			TimeUnit.MILLISECONDS.sleep(100);
@@ -32,6 +36,7 @@ public class Viewer extends Canvas {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		numRepaint++;
 		repaint();
 	}
 }
