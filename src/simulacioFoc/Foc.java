@@ -147,7 +147,7 @@ public class Foc extends BufferedImage {
 	private void inicialitzarMatriuT() {
 		this.matriuTemperatures = new int[this.getHeight()][this.getWidth()];
 		
-		for (int fila = 0; fila < this.getHeight() - 1; fila++) {
+		for (int fila = 0; fila < this.getHeight(); fila++) {
 			for (int columna = 0; columna < this.getWidth(); columna++) {
 				this.matriuTemperatures[fila][columna] = 0;
 			}
