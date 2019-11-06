@@ -1,11 +1,10 @@
 package simulacioFoc;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
 import java.awt.image.DataBufferByte;
-import java.awt.image.WritableRaster;
-import java.util.Hashtable;
+import java.awt.image.Raster;
 
 public class Foc extends BufferedImage {
 	
@@ -14,10 +13,10 @@ public class Foc extends BufferedImage {
 	private int[][] matriuTemperatures;
 	private Color[] paleta;
 	
-	public Foc(ColorModel cm, WritableRaster wr, boolean isRasterPremultiplied, Hashtable<?,?> properties) {
-		super(cm, wr, isRasterPremultiplied, properties);
-		this.arrayBytes = ((DataBufferByte) this.getRaster().getDataBuffer()).getData();
+	public Foc(int ample, int alt, int tipus) {
+		super(ample, alt, tipus);
 		this.numCanals = (this.getColorModel().hasAlpha() ? 4 : 3);
+		this.arrayBytes = new byte[ample * alt * this.numCanals];
 		PaletaColors pc = new PaletaColors(new Color(0, 0, 0), new Color(255, 230, 50), new Color(255, 180, 100), new Color(255, 150, 150));
 		this.paleta = pc.getPaleta();
 		inicialitzarMatriuT();
@@ -40,6 +39,11 @@ public class Foc extends BufferedImage {
 		colorejarImatge();
 		if (generarXispes)
 			generarXispes();
+	}
+	
+	public Foc getFoc() {
+		this.setData(Raster.createRaster(this.getSampleModel(), new DataBufferByte(this.arrayBytes, this.arrayBytes.length), new Point() ) );
+		return this;
 	}
 	
 	private void colorejarImatge() {
@@ -77,6 +81,13 @@ public class Foc extends BufferedImage {
 		ba[i] = (byte) c.getBlue();
 		ba[i + 1] = (byte) c.getGreen();
 		ba[i + 2] = (byte) c.getRed();
+		
+		if (this.numCanals == 4) {
+			if (this.matriuTemperatures[y][x] < 50)
+				ba[i - 1] = (byte) 50;
+			else
+				ba[i - 1] = (byte) 255;
+		}
 	}
 
 }

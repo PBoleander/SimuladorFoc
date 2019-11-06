@@ -20,7 +20,7 @@ public class Viewer extends Canvas {
 	public Viewer(Image i) {
 		super();
 		this.img = (BufferedImage) i;
-		this.f = new Foc(img.getColorModel(), img.copyData(null), img.isAlphaPremultiplied(), null);
+		this.f = new Foc(300, 100, BufferedImage.TYPE_4BYTE_ABGR);
 		this.numRepaint = 0;
 	}
 
@@ -29,7 +29,8 @@ public class Viewer extends Canvas {
 		boolean xispa;
 		xispa = (numRepaint % 5 == 0 ? true : false);
 		f.actualitzarMatriuT(xispa);
-		g.drawImage(f, 0, 0, this.getWidth(), this.getHeight(), Color.BLACK, null);
+		g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), Color.BLACK, null);
+		g.drawImage(f.getFoc(), 0, 0, this.getWidth(), this.getHeight(), null, null);
 		try {
 			TimeUnit.MILLISECONDS.sleep(100);
 		} catch (InterruptedException e) {
