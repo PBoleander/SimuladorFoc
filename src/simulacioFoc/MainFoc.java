@@ -12,9 +12,6 @@ import javax.swing.JFrame;
 
 public class MainFoc extends JFrame {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private Viewer v;
 	private ControlPanel cp;
@@ -51,6 +48,7 @@ public class MainFoc extends JFrame {
 		//Image imatge = ImageIO.read(new File("/home/oleander/Imágenes/Fondos/sunset_in_rome-wallpaper-1366x768.jpg"));
 		Image imatge = ImageIO.read(new File("/home/oleander/Imágenes/ImatgePerFocJava.png"));
 		//Image imatge = ImageIO.read(new File("/home/oleander/Imágenes/Fondos/water_background_aesthetic-wallpaper-1366x768.jpg"));
+		//Image imatge = ImageIO.read(new File("/home/oleander/Imágenes/Fondos/hidden_waterfalls-wallpaper-1366x768.jpg"));
 		new MainFoc(imatge);
 	}
 

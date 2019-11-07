@@ -37,7 +37,7 @@ public class Foc extends BufferedImage {
 	public void actualitzarMatriuT(boolean generarXispes) {
 		for (int fila = this.getHeight() - 2; fila >= 0; fila--) {
 			for (int columna = 1; columna < this.getWidth() - 1; columna++) {
-				if (this.matriuTemperatures[fila][columna] != 255) {
+				if (!this.xispesABordes || (this.xispesABordes && !esBordeAquestPixel(fila, columna))) {
 					this.matriuTemperatures[fila][columna] = 
 							(int) ((this.matriuTemperatures[fila][columna - 1] * 0.8 +
 							this.matriuTemperatures[fila][columna] * 1.2 +
@@ -120,6 +120,11 @@ public class Foc extends BufferedImage {
 		}
 	}
 	
+	private boolean esBordeAquestPixel(int fila, int columna) {
+		Color c = getColorPixel(this.matriuBordes, this.nCanalsImgFons, columna, fila);
+		return ((c.getBlue() + c.getGreen() + c.getRed() > 50) ? true : false);
+	}
+	
 	private void generarXispes(boolean inici) {
 		if (inici && this.xispesABordes)
 			detectarBordes();
@@ -165,12 +170,9 @@ public class Foc extends BufferedImage {
 		else generarXispaAqui = true;
 		
 		for (int columna = 1; columna < this.getWidth() - 1; columna++) {
-			if (this.xispesABordes) {
-				Color c = getColorPixel(this.matriuBordes, this.nCanalsImgFons, columna, fila);
-				if (c.getBlue() + c.getGreen() + c.getRed() > 50) {
-					generarXispaAqui = true;
-				}	
-			}
+			if (this.xispesABordes)
+				generarXispaAqui = esBordeAquestPixel(fila, columna);
+			
 			if (generarXispaAqui) {
 				if (inici || !costatsEncesos(fila, columna))
 					this.matriuTemperatures[fila][columna] = ((int) (2 * Math.random()) == 0 ? 255 : 0);
