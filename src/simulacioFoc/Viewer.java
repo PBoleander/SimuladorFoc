@@ -13,10 +13,15 @@ public class Viewer extends Canvas {
 	private Foc f;
 	private int numRepaint;
 	
+	private Graphics bufferGraphics;
+	private BufferedImage offscreen;
+	
 	public Viewer(Image i) {
 		super();
 		this.img = (BufferedImage) i;
 		this.f = new Foc(img.getWidth(), img.getHeight(), BufferedImage.TYPE_4BYTE_ABGR, img);
+		
+		this.numRepaint = 0;
 	}
 	
 	public Foc getFoc() {
@@ -25,23 +30,29 @@ public class Viewer extends Canvas {
 
 	@Override
 	public void paint(Graphics g) {
-		g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), null);
+		this.offscreen = (BufferedImage) createImage(img.getWidth(), img.getHeight());
+		this.bufferGraphics = offscreen.getGraphics();
+		
+		bufferGraphics.clearRect(0, 0, this.getWidth(), this.getHeight());
+		bufferGraphics.drawImage(img, 0, 0, this);
+		bufferGraphics.drawImage(f.getFoc(), 0, 0, this);
+		
+		g.drawImage(offscreen, 0, 0, this.getWidth(), this.getHeight(), null);
+		
+		try {
+			TimeUnit.MILLISECONDS.sleep(10);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		numRepaint++;
+		boolean actualitzarXispa = (numRepaint % 10 == 0 ? true : false);
+		f.actualitzarMatriuT(actualitzarXispa);
 		repaint();
 	}
 	
 	@Override
-	public void repaint() {
-		this.numRepaint = 0;
-		while (this.numRepaint < 100) {
-			this.getGraphics().drawImage(f.getFoc(), 0, 0, this.getWidth(), this.getHeight(), null);
-			try {
-				TimeUnit.MILLISECONDS.sleep(100);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			numRepaint++;
-			boolean actualitzarXispa = (numRepaint % 10 == 0 ? true : false);
-			f.actualitzarMatriuT(actualitzarXispa);
-		}
+	public void update(Graphics g) {
+		paint(g);
 	}
 }

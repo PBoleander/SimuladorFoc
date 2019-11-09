@@ -29,7 +29,7 @@ public class Foc extends BufferedImage {
 		this.arrayBytesFoc = new byte[ample * alt * this.numCanals];
 		this.matriuBordes = new byte[this.arrayBytesImatgeFons.length];
 		
-		PaletaColors pc = new PaletaColors(new Color(0, 0, 0, 0), new Color(255, 230, 205, 25), new Color(255, 180, 50, 150), new Color(255, 255, 255, 255));
+		PaletaColors pc = new PaletaColors(new Color(0, 0, 0, 0), new Color(255, 230, 205, 25), new Color(255, 180, 50, 200), new Color(255, 255, 255, 255));
 		this.paleta = pc.getPaleta();
 		
 		this.xispesABordes = true;
@@ -189,7 +189,7 @@ public class Foc extends BufferedImage {
 				if (inici || !costatsEncesos(fila, columna))
 					this.matriuTemperatures[fila][columna] = ((int) (2 * Math.random()) == 0 ? 255 : 0);
 				else
-					this.matriuTemperatures[fila][columna] = ((int) (4 * Math.random()) != 0 ? 255 : 0);
+					this.matriuTemperatures[fila][columna] = ((int) (10 * Math.random()) != 0 ? 255 : 0);
 				
 				if (this.xispesABordes) generarXispaAqui = false;
 			}
