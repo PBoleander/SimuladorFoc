@@ -18,19 +18,24 @@ public class Foc extends BufferedImage {
 	private Color[] paleta;
 	private boolean xispesABordes;
 	
-	public Foc(int ample, int alt, int tipus, BufferedImage i) {
+	public Foc(int ample, int alt, int tipus, BufferedImage imgFons) {
 		super(ample, alt, tipus);
-		this.imatgeFons = i;
+		
+		this.imatgeFons = imgFons;
 		this.nCanalsImgFons = this.imatgeFons.getColorModel().hasAlpha() ? 4 : 3;
 		this.arrayBytesImatgeFons = ((DataBufferByte) this.imatgeFons.getRaster().getDataBuffer()).getData();
+		
 		this.numCanals = (this.getColorModel().hasAlpha() ? 4 : 3);
 		this.arrayBytesFoc = new byte[ample * alt * this.numCanals];
 		this.matriuBordes = new byte[this.arrayBytesImatgeFons.length];
-		PaletaColors pc = new PaletaColors(new Color(0, 0, 0), new Color(255, 230, 205), new Color(255, 180, 50), new Color(255, 255, 255));
+		
+		PaletaColors pc = new PaletaColors(new Color(0, 0, 0, 0), new Color(255, 230, 205, 25), new Color(255, 180, 50, 150), new Color(255, 255, 255, 255));
 		this.paleta = pc.getPaleta();
-		this.xispesABordes = false;
+		
+		this.xispesABordes = true;
 		
 		inicialitzarMatriuT();
+		inicialitzarArrayBytes();
 		generarXispes(true);
 	}
 	
@@ -64,6 +69,7 @@ public class Foc extends BufferedImage {
 	public void setXispesABordes(boolean bordes) {
 		this.xispesABordes = bordes;
 		inicialitzarMatriuT();
+		inicialitzarArrayBytes();
 		generarXispes(true);
 	}
 	
@@ -115,7 +121,7 @@ public class Foc extends BufferedImage {
 					}
 				}
 				
-				setColorPixel(matriuBordes, this.nCanalsImgFons, columnaFons, filaFons, corregirColor(nouR, nouG, nouB));
+				setColorPixel(this.matriuBordes, this.nCanalsImgFons, columnaFons, filaFons, corregirColor(nouR, nouG, nouB));
 			}
 		}
 	}
@@ -147,6 +153,12 @@ public class Foc extends BufferedImage {
 		int i = passarXYAIndexArray(x, y, numCanalsImatge);
 		
 		return new Color(Byte.toUnsignedInt(ba[i + 2]), Byte.toUnsignedInt(ba[i + 1]), Byte.toUnsignedInt(ba[i]));
+	}
+	
+	private void inicialitzarArrayBytes() {
+		for (int i = 0; i < this.arrayBytesFoc.length; i++) {
+			this.arrayBytesFoc[i] = 0;
+		}
 	}
 	
 	private void inicialitzarMatriuT() {
@@ -191,13 +203,8 @@ public class Foc extends BufferedImage {
 		ba[i + 1] = (byte) c.getGreen();
 		ba[i + 2] = (byte) c.getRed();
 		
-		if (this.numCanals == 4) { // transparències
-			if (this.matriuTemperatures[y][x] < 100)
-				ba[i - 1] = (byte) 25;
-			else if (this.matriuTemperatures[y][x] < 150)
-				ba[i - 1] = (byte) 175;
-			else
-				ba[i - 1] = (byte) 255;
+		if (numCanalsImg == 4) {
+			ba[i - 1] = (byte) c.getAlpha();
 		}
 	}
 

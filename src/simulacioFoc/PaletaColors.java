@@ -15,16 +15,18 @@ public class PaletaColors {
 		return this.paleta;
 	}
 	
-	private Color corregirColor(int r, int g, int b) {
+	private Color corregirColor(int r, int g, int b, int a) {
 		r = (r > 255 ? 255 : r);
 		g = (g > 255 ? 255 : g);
 		b = (b > 255 ? 255 : b);
+		a = (a > 255 ? 255 : a);
 		
 		r = (r < 0 ? 0 : r);
 		g = (g < 0 ? 0 : g);
 		b = (b < 0 ? 0 : b);
+		a = (a < 0 ? 0 : a);
 		
-		return new Color(r, g, b);
+		return new Color(r, g, b, a);
 	}
 	
 	private void inicialitzarPaleta(Color c0, Color c85, Color c170, Color c255) {
@@ -39,8 +41,8 @@ public class PaletaColors {
 	}
 	
 	private void rellenarPaleta() {
-		double deltaR, deltaG, deltaB;
-		deltaR = deltaG = deltaB = 0;
+		double deltaR, deltaG, deltaB, deltaA;
+		deltaR = deltaG = deltaB = deltaA = 0;
 		
 		for (int i = 1; i < this.paleta.length - 1; i++) {
 			switch (i) {
@@ -48,16 +50,19 @@ public class PaletaColors {
 				deltaR = (this.paleta[85].getRed() - this.paleta[0].getRed()) / 85.;
 				deltaG = (this.paleta[85].getGreen() - this.paleta[0].getGreen()) / 85.;
 				deltaB = (this.paleta[85].getBlue() - this.paleta[0].getBlue()) / 85.;
+				deltaA = (this.paleta[85].getAlpha() - this.paleta[0].getAlpha()) / 85.;
 				break;
 			case 86:
 				deltaR = (this.paleta[170].getRed() - this.paleta[85].getRed()) / 85.;
 				deltaG = (this.paleta[170].getGreen() - this.paleta[85].getGreen()) / 85.;
 				deltaB = (this.paleta[170].getBlue() - this.paleta[85].getBlue()) / 85.;
+				deltaA = (this.paleta[170].getAlpha() - this.paleta[85].getAlpha()) / 85.;
 				break;
 			case 171:
 				deltaR = (this.paleta[255].getRed() - this.paleta[170].getRed()) / 85.;
 				deltaG = (this.paleta[255].getGreen() - this.paleta[170].getGreen()) / 85.;
 				deltaB = (this.paleta[255].getBlue() - this.paleta[170].getBlue()) / 85.;
+				deltaA = (this.paleta[255].getAlpha() - this.paleta[170].getAlpha()) / 85.;
 				break;
 			}
 			
@@ -65,8 +70,9 @@ public class PaletaColors {
 				int nouR = Math.round((float) (this.paleta[i - 1].getRed() + deltaR));
 				int nouG = Math.round((float) (this.paleta[i - 1].getGreen() + deltaG));
 				int nouB = Math.round((float) (this.paleta[i - 1].getBlue() + deltaB));
+				int nouA = Math.round((float) (this.paleta[i - 1].getAlpha() + deltaA));
 				
-				this.paleta[i] = corregirColor(nouR, nouG, nouB);
+				this.paleta[i] = corregirColor(nouR, nouG, nouB, nouA);
 			}
 		}
 	}

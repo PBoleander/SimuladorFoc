@@ -12,8 +12,8 @@ public class ControlPanel extends JPanel implements MouseListener {
 	
 	private static final long serialVersionUID = 1L;
 	
-	JButton btnXispesBordes, btnXispesLiniaInferior;
-	Viewer v;
+	private JButton btnXispesBordes, btnXispesLiniaInferior;
+	private Viewer v;
 
 	public void mouseClicked(MouseEvent e) {
 		if (e.getSource().equals(btnXispesBordes)) {
@@ -21,8 +21,8 @@ public class ControlPanel extends JPanel implements MouseListener {
 		} else if (e.getSource().equals(btnXispesLiniaInferior)) {
 			this.v.getFoc().setXispesABordes(false);
 		}
+		this.v.paint(this.v.getGraphics());
 	}
-	
 	public void mouseReleased(MouseEvent e) {}
 	public void mouseEntered(MouseEvent e) {}
 	public void mouseExited(MouseEvent e) {}

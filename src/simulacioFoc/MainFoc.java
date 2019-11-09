@@ -19,11 +19,11 @@ public class MainFoc extends JFrame {
 	public MainFoc(Image imatge) {
 		super();
 		this.v = new Viewer(imatge);
-		this.cp = new ControlPanel(this.v); 
+		this.cp = new ControlPanel(this.v);
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
-		this.setMinimumSize(new Dimension(600, 200));
+		this.setMinimumSize(new Dimension(1366, 768));
 		this.setLayout(new GridBagLayout());
 		
 		GridBagConstraints c = new GridBagConstraints();
