@@ -21,7 +21,6 @@ public class ControlPanel extends JPanel implements MouseListener {
 		} else if (e.getSource().equals(btnXispesLiniaInferior)) {
 			this.v.getFoc().setXispesABordes(false);
 		}
-		this.v.paint(this.v.getGraphics());
 	}
 	public void mouseReleased(MouseEvent e) {}
 	public void mouseEntered(MouseEvent e) {}
