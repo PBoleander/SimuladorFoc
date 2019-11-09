@@ -8,9 +8,6 @@ import java.util.concurrent.TimeUnit;
 
 public class Viewer extends Canvas {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private BufferedImage img;
 	private Foc f;
@@ -28,7 +25,7 @@ public class Viewer extends Canvas {
 
 	@Override
 	public void paint(Graphics g) {
-		g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), null, null);
+		g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), null);
 		repaint();
 	}
 	
@@ -36,7 +33,7 @@ public class Viewer extends Canvas {
 	public void repaint() {
 		this.numRepaint = 0;
 		while (this.numRepaint < 100) {
-			this.getGraphics().drawImage(f.getFoc(), 0, 0, this.getWidth(), this.getHeight(), null, null);
+			this.getGraphics().drawImage(f.getFoc(), 0, 0, this.getWidth(), this.getHeight(), null);
 			try {
 				TimeUnit.MILLISECONDS.sleep(100);
 			} catch (InterruptedException e) {
