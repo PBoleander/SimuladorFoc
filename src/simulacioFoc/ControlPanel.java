@@ -38,9 +38,9 @@ public class ControlPanel extends JPanel implements MouseListener {
 		GridBagConstraints b = new GridBagConstraints();
 		b.fill = GridBagConstraints.HORIZONTAL;
 		
-		this.btnXispesBordes = afegirBotoNou(btnXispesBordes, "Generar foc als bordes", 0, 0, b);
+		this.btnXispesBordes = afegirBotoNou(btnXispesBordes, "Generar xispes als bordes", 0, 0, b);
 		this.btnXispesLiniaInferior = afegirBotoNou(this.btnXispesLiniaInferior, "Generar xispes a part inferior", 0, 1, b);
-		this.btnPausa = afegirBotoNou(this.btnPausa, "Pausa animació", 0, 2, b);
+		this.btnPausa = afegirBotoNou(this.btnPausa, "Pausar animació", 0, 2, b);
 	}
 	
 	private JButton afegirBotoNou(JButton boto, String titol, int x, int y, GridBagConstraints b) {
@@ -55,7 +55,7 @@ public class ControlPanel extends JPanel implements MouseListener {
 	
 	private void canviaPausa(boolean pausa) {
 		this.v.setPausa(pausa);
-		this.btnPausa.setText((pausa ? "Reprodueix" : "Pausa") + " animació");
+		this.btnPausa.setText((pausa ? "Reproduir" : "Pausar") + " animació");
 		if (!pausa) this.v.paint(this.v.getGraphics());
 	}
 

@@ -50,6 +50,7 @@ public class MainFoc extends JFrame {
 		//Image imatge = ImageIO.read(new File("/home/oleander/Imágenes/Fondos/water_background_aesthetic-wallpaper-1366x768.jpg"));
 		//Image imatge = ImageIO.read(new File("/home/oleander/Imágenes/Fondos/hidden_waterfalls-wallpaper-1366x768.jpg"));
 		Image imatge = ImageIO.read(new File("/home/oleander/Documentos/FP/Segundo/Empresa/Pasefesa/logo.png"));
+		//Image imatge = ImageIO.read(new File("/home/oleander/Imágenes/Vegetta.png"));
 		new MainFoc(imatge);
 	}
 

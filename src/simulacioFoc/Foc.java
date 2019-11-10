@@ -44,12 +44,12 @@ public class Foc extends BufferedImage {
 			for (int columna = 1; columna < this.getWidth() - 1; columna++) {
 				if (!this.xispesABordes || (this.xispesABordes && !esBordeAquestPixel(fila, columna))) {
 					this.matriuTemperatures[fila][columna] = 
-							(int) ((this.matriuTemperatures[fila][columna - 1] * 0.5 +
+							(int) ((this.matriuTemperatures[fila][columna - 1] * 1.25 +
 							this.matriuTemperatures[fila][columna] * 2 +
-							this.matriuTemperatures[fila][columna + 1] * 0.5 +
+							this.matriuTemperatures[fila][columna + 1] * 1.25 +
 							this.matriuTemperatures[fila + 1][columna - 1] * 0.75 +
 							this.matriuTemperatures[fila + 1][columna] * 1.5 +
-							this.matriuTemperatures[fila + 1][columna + 1] * 0.75) / 6.05);
+							this.matriuTemperatures[fila + 1][columna + 1] * 0.75) / 7.55);
 					
 					this.matriuTemperatures[fila][columna] = (this.matriuTemperatures[fila][columna] > 255 ? 255 : this.matriuTemperatures[fila][columna]);
 				}
