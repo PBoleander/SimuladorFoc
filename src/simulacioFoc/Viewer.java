@@ -1,6 +1,7 @@
 package simulacioFoc;
 
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -22,6 +23,7 @@ public class Viewer extends Canvas {
 		this.img = (BufferedImage) i;
 		this.f = new Foc(img.getWidth(), img.getHeight(), BufferedImage.TYPE_4BYTE_ABGR, img);
 		
+		this.setBackground(Color.BLACK);
 		this.numRepaint = 0;
 		this.pausa = false;
 	}

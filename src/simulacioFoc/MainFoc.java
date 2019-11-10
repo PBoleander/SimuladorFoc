@@ -23,7 +23,7 @@ public class MainFoc extends JFrame {
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
-		this.setMinimumSize(new Dimension(1366, 768));
+		this.setMinimumSize(new Dimension(600, 400));
 		this.setLayout(new GridBagLayout());
 		
 		GridBagConstraints c = new GridBagConstraints();
@@ -45,10 +45,11 @@ public class MainFoc extends JFrame {
 	}
 
 	public static void main(String[] args) throws IOException {
-		Image imatge = ImageIO.read(new File("/home/oleander/Imágenes/Fondos/sunset_in_rome-wallpaper-1366x768.jpg"));
+		//Image imatge = ImageIO.read(new File("/home/oleander/Imágenes/Fondos/sunset_in_rome-wallpaper-1366x768.jpg"));
 		//Image imatge = ImageIO.read(new File("/home/oleander/Imágenes/ImatgePerFocJava.png"));
 		//Image imatge = ImageIO.read(new File("/home/oleander/Imágenes/Fondos/water_background_aesthetic-wallpaper-1366x768.jpg"));
 		//Image imatge = ImageIO.read(new File("/home/oleander/Imágenes/Fondos/hidden_waterfalls-wallpaper-1366x768.jpg"));
+		Image imatge = ImageIO.read(new File("/home/oleander/Documentos/FP/Segundo/Empresa/Pasefesa/logo.png"));
 		new MainFoc(imatge);
 	}
 
