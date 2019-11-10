@@ -12,14 +12,18 @@ public class ControlPanel extends JPanel implements MouseListener {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private JButton btnXispesBordes, btnXispesLiniaInferior;
+	private JButton btnXispesBordes, btnXispesLiniaInferior, btnPausa;
 	private Viewer v;
 
 	public void mouseClicked(MouseEvent e) {
 		if (e.getSource().equals(btnXispesBordes)) {
 			this.v.getFoc().setXispesABordes(true);
+			canviaPausa(false);
 		} else if (e.getSource().equals(btnXispesLiniaInferior)) {
 			this.v.getFoc().setXispesABordes(false);
+			canviaPausa(false);
+		} else if (e.getSource().equals(btnPausa)) {
+			canviaPausa(!this.v.getPausa());
 		}
 	}
 	public void mouseReleased(MouseEvent e) {}
@@ -36,6 +40,7 @@ public class ControlPanel extends JPanel implements MouseListener {
 		
 		this.btnXispesBordes = afegirBotoNou(btnXispesBordes, "Generar foc als bordes", 0, 0, b);
 		this.btnXispesLiniaInferior = afegirBotoNou(this.btnXispesLiniaInferior, "Generar xispes a part inferior", 0, 1, b);
+		this.btnPausa = afegirBotoNou(this.btnPausa, "Pausa animació", 0, 2, b);
 	}
 	
 	private JButton afegirBotoNou(JButton boto, String titol, int x, int y, GridBagConstraints b) {
@@ -46,6 +51,12 @@ public class ControlPanel extends JPanel implements MouseListener {
 		this.add(boto, b);
 		
 		return boto;
+	}
+	
+	private void canviaPausa(boolean pausa) {
+		this.v.setPausa(pausa);
+		this.btnPausa.setText((pausa ? "Reprodueix" : "Pausa") + " animació");
+		if (!pausa) this.v.paint(this.v.getGraphics());
 	}
 
 }

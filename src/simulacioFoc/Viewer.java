@@ -14,7 +14,8 @@ public class Viewer extends Canvas {
 	private int numRepaint;
 	
 	private Graphics bufferGraphics;
-	private BufferedImage offscreen;
+	private BufferedImage borrador;
+	private boolean pausa;
 	
 	public Viewer(Image i) {
 		super();
@@ -22,22 +23,27 @@ public class Viewer extends Canvas {
 		this.f = new Foc(img.getWidth(), img.getHeight(), BufferedImage.TYPE_4BYTE_ABGR, img);
 		
 		this.numRepaint = 0;
+		this.pausa = false;
 	}
 	
 	public Foc getFoc() {
 		return this.f;
 	}
+	
+	public boolean getPausa() {
+		return this.pausa;
+	}
 
 	@Override
 	public void paint(Graphics g) {
-		this.offscreen = (BufferedImage) createImage(img.getWidth(), img.getHeight());
-		this.bufferGraphics = offscreen.getGraphics();
+		this.borrador = (BufferedImage) createImage(img.getWidth(), img.getHeight());
+		this.bufferGraphics = borrador.getGraphics();
 		
 		bufferGraphics.clearRect(0, 0, this.getWidth(), this.getHeight());
 		bufferGraphics.drawImage(img, 0, 0, this);
 		bufferGraphics.drawImage(f.getFoc(), 0, 0, this);
 		
-		g.drawImage(offscreen, 0, 0, this.getWidth(), this.getHeight(), null);
+		g.drawImage(borrador, 0, 0, this.getWidth(), this.getHeight(), null);
 		
 		try {
 			TimeUnit.MILLISECONDS.sleep(10);
@@ -48,7 +54,12 @@ public class Viewer extends Canvas {
 		numRepaint++;
 		boolean actualitzarXispa = (numRepaint % 10 == 0 ? true : false);
 		f.actualitzarMatriuT(actualitzarXispa);
-		repaint();
+		if (!pausa)
+			repaint();
+	}
+	
+	public void setPausa(boolean pausa) {
+		this.pausa = pausa;
 	}
 	
 	@Override
