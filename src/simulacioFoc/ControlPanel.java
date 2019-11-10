@@ -39,7 +39,7 @@ public class ControlPanel extends JPanel implements MouseListener {
 		b.fill = GridBagConstraints.HORIZONTAL;
 		
 		this.btnXispesBordes = afegirBotoNou(btnXispesBordes, "Generar xispes als bordes", 0, 0, b);
-		this.btnXispesLiniaInferior = afegirBotoNou(this.btnXispesLiniaInferior, "Generar xispes a part inferior", 0, 1, b);
+		this.btnXispesLiniaInferior = afegirBotoNou(this.btnXispesLiniaInferior, "Generar xispes al costat inferior", 0, 1, b);
 		this.btnPausa = afegirBotoNou(this.btnPausa, "Pausar animació", 0, 2, b);
 	}
 	
