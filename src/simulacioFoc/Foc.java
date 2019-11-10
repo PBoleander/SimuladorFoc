@@ -29,10 +29,10 @@ public class Foc extends BufferedImage {
 		this.arrayBytesFoc = new byte[ample * alt * this.numCanals];
 		this.matriuBordes = new byte[this.arrayBytesImatgeFons.length];
 		
-		PaletaColors pc = new PaletaColors(new Color(0, 0, 0, 0), new Color(255, 230, 205, 25), new Color(255, 180, 50, 200), new Color(255, 255, 255, 255));
+		PaletaColors pc = new PaletaColors(new Color(255, 255, 200, 0), new Color(255, 255, 100, 50), new Color(255, 255, 0, 180), new Color(255, 255, 255, 255));
 		this.paleta = pc.getPaleta();
 		
-		this.xispesABordes = true;
+		this.xispesABordes = false;
 		
 		inicialitzarMatriuT();
 		inicialitzarArrayBytes();
@@ -44,12 +44,12 @@ public class Foc extends BufferedImage {
 			for (int columna = 1; columna < this.getWidth() - 1; columna++) {
 				if (!this.xispesABordes || (this.xispesABordes && !esBordeAquestPixel(fila, columna))) {
 					this.matriuTemperatures[fila][columna] = 
-							(int) ((this.matriuTemperatures[fila][columna - 1] * 0.8 +
-							this.matriuTemperatures[fila][columna] * 1.2 +
-							this.matriuTemperatures[fila][columna + 1] * 0.8 +
-							this.matriuTemperatures[fila + 1][columna - 1] * 0.8 +
-							this.matriuTemperatures[fila + 1][columna] +
-							this.matriuTemperatures[fila + 1][columna + 1] * 0.8) / 5.55);
+							(int) ((this.matriuTemperatures[fila][columna - 1] * 0.5 +
+							this.matriuTemperatures[fila][columna] * 2 +
+							this.matriuTemperatures[fila][columna + 1] * 0.5 +
+							this.matriuTemperatures[fila + 1][columna - 1] * 0.75 +
+							this.matriuTemperatures[fila + 1][columna] * 1.5 +
+							this.matriuTemperatures[fila + 1][columna + 1] * 0.75) / 6.05);
 					
 					this.matriuTemperatures[fila][columna] = (this.matriuTemperatures[fila][columna] > 255 ? 255 : this.matriuTemperatures[fila][columna]);
 				}
@@ -187,7 +187,7 @@ public class Foc extends BufferedImage {
 			
 			if (generarXispaAqui) {
 				if (inici || !costatsEncesos(fila, columna))
-					this.matriuTemperatures[fila][columna] = ((int) (2 * Math.random()) == 0 ? 255 : 0);
+					this.matriuTemperatures[fila][columna] = ((int) (100 * Math.random()) == 0 ? 255 : 0);
 				else
 					this.matriuTemperatures[fila][columna] = ((int) (10 * Math.random()) != 0 ? 255 : 0);
 				

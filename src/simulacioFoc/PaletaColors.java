@@ -32,7 +32,7 @@ public class PaletaColors {
 	private void inicialitzarPaleta(Color c0, Color c85, Color c170, Color c255) {
 		this.paleta = new Color[256];
 		for (int i = 0; i < this.paleta.length; i++) {
-			this.paleta[i] = new Color(0, 0, 0);
+			this.paleta[i] = new Color(0, 0, 0, 0);
 		}
 		this.paleta[0] = c0;
 		this.paleta[85] = c85;
@@ -66,14 +66,12 @@ public class PaletaColors {
 				break;
 			}
 			
-			if (i != 85 && i != 170) {
-				int nouR = Math.round((float) (this.paleta[i - 1].getRed() + deltaR));
-				int nouG = Math.round((float) (this.paleta[i - 1].getGreen() + deltaG));
-				int nouB = Math.round((float) (this.paleta[i - 1].getBlue() + deltaB));
-				int nouA = Math.round((float) (this.paleta[i - 1].getAlpha() + deltaA));
-				
-				this.paleta[i] = corregirColor(nouR, nouG, nouB, nouA);
-			}
+			int nouR = Math.round((float) (this.paleta[i / 85 * 85].getRed() + (i % 85) * deltaR));
+			int nouG = Math.round((float) (this.paleta[i / 85 * 85].getGreen() + (i % 85) * deltaG));
+			int nouB = Math.round((float) (this.paleta[i / 85 * 85].getBlue() + (i % 85) * deltaB));
+			int nouA = Math.round((float) (this.paleta[i / 85 * 85].getAlpha() + (i % 85) * deltaA));
+			
+			this.paleta[i] = corregirColor(nouR, nouG, nouB, nouA);
 		}
 	}
 
