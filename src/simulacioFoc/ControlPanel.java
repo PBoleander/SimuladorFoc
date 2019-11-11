@@ -55,7 +55,7 @@ public class ControlPanel extends JPanel implements MouseListener {
 	}
 	public void mouseReleased(MouseEvent e) {
 		if (e.getSource().equals(jsAlturaFoc)) {
-			double factorAlturaFoc = 7.5001 + 0.0025 * (100 - jsAlturaFoc.getValue());
+			double factorAlturaFoc = 7.485 + 0.0008 * (100 - jsAlturaFoc.getValue());
 			this.v.getFoc().setFactorAlturaFoc(factorAlturaFoc);
 		}
 	}
