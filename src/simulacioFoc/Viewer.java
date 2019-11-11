@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 public class Viewer extends Canvas {
 	
 	private static final long serialVersionUID = 1L;
-	private BufferedImage img;
+	private BufferedImage imgFons;
 	private Foc f;
 	private int numRepaint;
 	
@@ -20,8 +20,8 @@ public class Viewer extends Canvas {
 	
 	public Viewer(Image i) {
 		super();
-		this.img = (BufferedImage) i;
-		this.f = new Foc(img.getWidth(), img.getHeight(), BufferedImage.TYPE_4BYTE_ABGR, img);
+		this.imgFons = (BufferedImage) i;
+		this.f = new Foc(imgFons.getWidth(), imgFons.getHeight(), BufferedImage.TYPE_4BYTE_ABGR, imgFons);
 		
 		this.setBackground(Color.BLACK);
 		this.numRepaint = 0;
@@ -38,11 +38,11 @@ public class Viewer extends Canvas {
 
 	@Override
 	public void paint(Graphics g) {
-		this.borrador = (BufferedImage) createImage(img.getWidth(), img.getHeight());
+		this.borrador = (BufferedImage) createImage(imgFons.getWidth(), imgFons.getHeight());
 		this.bufferGraphics = borrador.getGraphics();
 		
-		bufferGraphics.clearRect(0, 0, img.getWidth(), img.getHeight());
-		bufferGraphics.drawImage(img, 0, 0, this);
+		bufferGraphics.clearRect(0, 0, imgFons.getWidth(), imgFons.getHeight());
+		bufferGraphics.drawImage(imgFons, 0, 0, this);
 		bufferGraphics.drawImage(f.getFoc(), 0, 0, this);
 		
 		g.drawImage(borrador, 0, 0, this.getWidth(), this.getHeight(), null);
@@ -58,6 +58,13 @@ public class Viewer extends Canvas {
 		f.actualitzarMatriuT(actualitzarXispa);
 		if (!pausa)
 			repaint();
+	}
+	
+	public void setImatgeFons(Image i) {
+		this.imgFons = (BufferedImage) i;
+		this.f = new Foc(imgFons.getWidth(), imgFons.getHeight(), BufferedImage.TYPE_4BYTE_ABGR, imgFons);
+		this.numRepaint = 0;
+		this.pausa = false;
 	}
 	
 	public void setPausa(boolean pausa) {

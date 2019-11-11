@@ -17,6 +17,7 @@ public class Foc extends BufferedImage {
 	private byte[] matriuBordes;
 	private Color[] paleta;
 	private boolean xispesABordes;
+	private double factorAlturaFoc;
 	
 	public Foc(int ample, int alt, int tipus, BufferedImage imgFons) {
 		super(ample, alt, tipus);
@@ -29,13 +30,14 @@ public class Foc extends BufferedImage {
 		this.arrayBytesFoc = new byte[ample * alt * this.numCanals];
 		this.matriuBordes = new byte[this.arrayBytesImatgeFons.length];
 		
-		PaletaColors pc = new PaletaColors(new Color(255, 255, 200, 0),
-										   new Color(255, 255, 100, 50),
-										   new Color(255, 255, 0, 180),
+		PaletaColors pc = new PaletaColors(new Color(0, 0, 0, 0),
+										   new Color(50, 50, 50, 150),
+										   new Color(200, 200, 0, 180),
 										   new Color(255, 255, 255, 255));
 		this.paleta = pc.getPaleta();
 		
 		this.xispesABordes = false;
+		this.factorAlturaFoc = 7.525;
 		
 		inicialitzarMatriuT();
 		inicialitzarArrayBytes();
@@ -52,7 +54,7 @@ public class Foc extends BufferedImage {
 							this.matriuTemperatures[fila][columna + 1] * 1.25 +
 							this.matriuTemperatures[fila + 1][columna - 1] * 0.75 +
 							this.matriuTemperatures[fila + 1][columna] * 1.5 +
-							this.matriuTemperatures[fila + 1][columna + 1] * 0.75) / 7.55);
+							this.matriuTemperatures[fila + 1][columna + 1] * 0.75) / this.factorAlturaFoc);
 					
 					this.matriuTemperatures[fila][columna] = (this.matriuTemperatures[fila][columna] > 255 ? 255 : this.matriuTemperatures[fila][columna]);
 				}
@@ -67,6 +69,10 @@ public class Foc extends BufferedImage {
 	public Foc getFoc() {
 		this.setData(Raster.createRaster(this.getSampleModel(), new DataBufferByte(this.arrayBytesFoc, this.arrayBytesFoc.length), new Point()));
 		return this;
+	}
+	
+	public void setFactorAlturaFoc(double factorAlturaFoc) {
+		this.factorAlturaFoc = factorAlturaFoc;
 	}
 	
 	public void setXispesABordes(boolean bordes) {
