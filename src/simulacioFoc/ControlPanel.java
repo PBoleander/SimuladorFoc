@@ -40,8 +40,12 @@ public class ControlPanel extends JPanel implements MouseListener {
 			Image img;
 			try {
 				img = ImageIO.read(new File(rutaImg.getText()));
-				this.v.setImatgeFons(img);
-				this.mostraError.setText(null);
+				if (img == null) {
+					this.mostraError.setText("Aquest arxiu no és una imatge");
+				} else {
+					this.v.setImatgeFons(img);
+					this.mostraError.setText(null);
+				}
 			} catch (IOException e1) {
 				mostraError.setText("Imatge no trobada");
 			}
