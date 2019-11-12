@@ -31,8 +31,8 @@ public class Foc extends BufferedImage {
 		this.matriuBordes = new byte[this.arrayBytesImatgeFons.length];
 		
 		PaletaColors pc = new PaletaColors(new Color(0, 0, 0, 0),
-										   new Color(50, 50, 50, 150),
-										   new Color(200, 200, 0, 180),
+										   new Color(75, 75, 75, 110),
+										   new Color(245, 161, 18, 120),
 										   new Color(255, 255, 255, 255));
 		this.paleta = pc.getPaleta();
 		
