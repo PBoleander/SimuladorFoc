@@ -39,9 +39,7 @@ public class Foc extends BufferedImage {
 		this.xispesABordes = false;
 		this.factorAlturaFoc = 7.525;
 		
-		inicialitzarMatriuT();
-		inicialitzarArrayBytes();
-		generarXispes(true);
+		iniciarFoc();
 	}
 	
 	public void actualitzarMatriuT(boolean generarXispes) {
@@ -77,9 +75,7 @@ public class Foc extends BufferedImage {
 	
 	public void setXispesABordes(boolean bordes) {
 		this.xispesABordes = bordes;
-		inicialitzarMatriuT();
-		inicialitzarArrayBytes();
-		generarXispes(true);
+		iniciarFoc();
 	}
 	
 	private void colorejarImatge() {
@@ -180,6 +176,12 @@ public class Foc extends BufferedImage {
 		}
 	}
 	
+	private void iniciarFoc() {
+		inicialitzarMatriuT();
+		inicialitzarArrayBytes();
+		generarXispes(true);
+	}
+	
 	private int passarXYAIndexArray(int x, int y, int nCanals) {
 		return nCanals * (y * this.getWidth() + x) + nCanals - 3; // this.numCanals - 3 = offset per si hi ha canal alfa
 	}
@@ -198,7 +200,7 @@ public class Foc extends BufferedImage {
 				if (inici || !costatsEncesos(fila, columna))
 					this.matriuTemperatures[fila][columna] = ((int) (100 * Math.random()) == 0 ? 255 : 0);
 				else
-					this.matriuTemperatures[fila][columna] = ((int) (10 * Math.random()) != 0 ? 255 : 0);
+					this.matriuTemperatures[fila][columna] = ((int) (20 * Math.random()) != 0 ? 255 : 0);
 				
 				if (this.xispesABordes) generarXispaAqui = false;
 			}
