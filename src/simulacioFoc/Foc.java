@@ -42,7 +42,22 @@ public class Foc extends BufferedImage {
 		iniciarFoc();
 	}
 	
-	public void actualitzarMatriuT(boolean generarXispes) {
+	public void actualitzarFoc(boolean generarXispes) {
+		actualitzarMatriuT();
+		colorejarImatge();
+		if (generarXispes) generarXispes(false);
+	}
+	
+	public void setFactorAlturaFoc(double factorAlturaFoc) {
+		this.factorAlturaFoc = factorAlturaFoc;
+	}
+	
+	public void setXispesABordes(boolean bordes) {
+		this.xispesABordes = bordes;
+		iniciarFoc();
+	}
+	
+	private void actualitzarMatriuT() {
 		for (int fila = this.getHeight() - 2; fila >= 0; fila--) {
 			for (int columna = 1; columna < this.getWidth() - 1; columna++) {
 				if (!this.xispesABordes || (this.xispesABordes && !esBordeAquestPixel(fila, columna))) {
@@ -58,19 +73,6 @@ public class Foc extends BufferedImage {
 				}
 			}
 		}
-		
-		colorejarImatge();
-		if (generarXispes)
-			generarXispes(false);
-	}
-	
-	public void setFactorAlturaFoc(double factorAlturaFoc) {
-		this.factorAlturaFoc = factorAlturaFoc;
-	}
-	
-	public void setXispesABordes(boolean bordes) {
-		this.xispesABordes = bordes;
-		iniciarFoc();
 	}
 	
 	private void colorejarImatge() {
@@ -145,7 +147,7 @@ public class Foc extends BufferedImage {
 		}
 		
 		for (int fila = filaInici; fila < filaFi; fila++) {
-			recorrerFila(fila, inici);
+			recorrerFilaEnBuscaDeXispes(fila, inici);
 		}
 	}
 	
@@ -181,7 +183,7 @@ public class Foc extends BufferedImage {
 		return nCanals * (y * this.getWidth() + x) + nCanals - 3; // this.numCanals - 3 = offset per si hi ha canal alfa
 	}
 	
-	private void recorrerFila(int fila, boolean inici) {
+	private void recorrerFilaEnBuscaDeXispes(int fila, boolean inici) {
 		boolean generarXispaAqui;
 		
 		if (this.xispesABordes) generarXispaAqui = false;

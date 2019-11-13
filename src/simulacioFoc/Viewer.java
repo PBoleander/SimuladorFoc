@@ -54,8 +54,8 @@ public class Viewer extends Canvas {
 			}
 	
 			numRepaint++;
-			boolean actualitzarXispa = (numRepaint % 10 == 0 ? true : false);
-			f.actualitzarMatriuT(actualitzarXispa);
+			boolean actualitzarXispa = (numRepaint % 5 == 0 ? true : false);
+			f.actualitzarFoc(actualitzarXispa);
 			if (!pausa)
 				repaint();
 		}
