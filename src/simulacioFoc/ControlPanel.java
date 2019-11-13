@@ -45,6 +45,7 @@ public class ControlPanel extends JPanel implements MouseListener {
 				} else {
 					this.v.setImatgeFons(img);
 					this.mostraError.setText(null);
+					calcularAlturaFoc();
 				}
 			} catch (IOException e1) {
 				mostraError.setText("Imatge no trobada");
@@ -53,8 +54,7 @@ public class ControlPanel extends JPanel implements MouseListener {
 	}
 	public void mouseReleased(MouseEvent e) {
 		if (e.getSource().equals(jsAlturaFoc)) {
-			double factorAlturaFoc = 7.485 + 0.0008 * (100 - jsAlturaFoc.getValue());
-			this.v.getFoc().setFactorAlturaFoc(factorAlturaFoc);
+			calcularAlturaFoc();
 		}
 	}
 	public void mouseEntered(MouseEvent e) {}
@@ -135,10 +135,15 @@ public class ControlPanel extends JPanel implements MouseListener {
 		return field;
 	}
 	
+	private void calcularAlturaFoc() {
+		double factorAlturaFoc = 7.485 + 0.0008 * (100 - jsAlturaFoc.getValue());
+		this.v.getFoc().setFactorAlturaFoc(factorAlturaFoc);
+	}
+	
 	private void canviaPausa(boolean pausa) {
 		this.v.setPausa(pausa);
 		this.btnPausa.setText((pausa ? "Reproduir" : "Pausar") + " animació");
-		if (!pausa) this.v.paint(this.v.getGraphics());
+		if (!pausa) this.v.repaint();
 	}
 	
 	private void textSliders(JSlider s, int espaiTicks) {

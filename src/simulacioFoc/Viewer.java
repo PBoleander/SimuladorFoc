@@ -66,7 +66,7 @@ public class Viewer extends Canvas {
 		this.f = new Foc(imgFons.getWidth(), imgFons.getHeight(), BufferedImage.TYPE_4BYTE_ABGR, imgFons);
 		this.numRepaint = 0;
 		this.pausa = false;
-		update(this.getGraphics());
+		repaint();
 	}
 	
 	public void setPausa(boolean pausa) {

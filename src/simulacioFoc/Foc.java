@@ -38,7 +38,6 @@ public class Foc extends BufferedImage {
 		this.paleta = pc.getPaleta();
 		
 		this.xispesABordes = false;
-		this.factorAlturaFoc = 7.525;
 		
 		iniciarFoc();
 	}
