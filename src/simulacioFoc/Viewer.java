@@ -18,14 +18,9 @@ public class Viewer extends Canvas {
 	private BufferedImage borrador;
 	private boolean pausa;
 	
-	public Viewer(Image i) {
+	public Viewer() {
 		super();
-		this.imgFons = (BufferedImage) i;
-		this.f = new Foc(imgFons.getWidth(), imgFons.getHeight(), BufferedImage.TYPE_4BYTE_ABGR, imgFons);
-		
 		this.setBackground(Color.BLACK);
-		this.numRepaint = 0;
-		this.pausa = false;
 	}
 	
 	public Foc getFoc() {
@@ -38,26 +33,32 @@ public class Viewer extends Canvas {
 
 	@Override
 	public void paint(Graphics g) {
-		this.borrador = (BufferedImage) createImage(imgFons.getWidth(), imgFons.getHeight());
-		this.bufferGraphics = borrador.getGraphics();
+		if (this.imgFons == null) {
+			String s = "Tria una imatge al quadre 'Ruta'";
+			int longitudEnPixelsString = g.getFontMetrics().stringWidth(s);
+			g.drawString(s, (this.getWidth() - longitudEnPixelsString) / 2, this.getHeight() / 2);
+		} else {
+			this.borrador = (BufferedImage) createImage(imgFons.getWidth(), imgFons.getHeight());
+			this.bufferGraphics = borrador.getGraphics();
 		
-		bufferGraphics.clearRect(0, 0, imgFons.getWidth(), imgFons.getHeight());
-		bufferGraphics.drawImage(imgFons, 0, 0, this);
-		bufferGraphics.drawImage(f, 0, 0, this);
+			bufferGraphics.clearRect(0, 0, imgFons.getWidth(), imgFons.getHeight());
+			bufferGraphics.drawImage(imgFons, 0, 0, this);
+			bufferGraphics.drawImage(f, 0, 0, this);
 		
-		g.drawImage(borrador, 0, 0, this.getWidth(), this.getHeight(), null);
-		
-		try {
-			TimeUnit.MILLISECONDS.sleep(10);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+			g.drawImage(borrador, 0, 0, this.getWidth(), this.getHeight(), null);
+			
+			try {
+				TimeUnit.MILLISECONDS.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+	
+			numRepaint++;
+			boolean actualitzarXispa = (numRepaint % 10 == 0 ? true : false);
+			f.actualitzarMatriuT(actualitzarXispa);
+			if (!pausa)
+				repaint();
 		}
-
-		numRepaint++;
-		boolean actualitzarXispa = (numRepaint % 10 == 0 ? true : false);
-		f.actualitzarMatriuT(actualitzarXispa);
-		if (!pausa)
-			repaint();
 	}
 	
 	public void setImatgeFons(Image i) {
@@ -65,6 +66,7 @@ public class Viewer extends Canvas {
 		this.f = new Foc(imgFons.getWidth(), imgFons.getHeight(), BufferedImage.TYPE_4BYTE_ABGR, imgFons);
 		this.numRepaint = 0;
 		this.pausa = false;
+		update(this.getGraphics());
 	}
 	
 	public void setPausa(boolean pausa) {

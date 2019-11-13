@@ -3,11 +3,6 @@ package simulacioFoc;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Image;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 public class MainFoc extends JFrame {
@@ -16,9 +11,9 @@ public class MainFoc extends JFrame {
 	private Viewer v;
 	private ControlPanel cp;
 	
-	public MainFoc(Image imatge) {
+	public MainFoc() {
 		super();
-		this.v = new Viewer(imatge);
+		this.v = new Viewer();
 		this.cp = new ControlPanel(this.v);
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -44,9 +39,8 @@ public class MainFoc extends JFrame {
 		this.pack();
 	}
 
-	public static void main(String[] args) throws IOException {
-		Image imatge = ImageIO.read(new File("/home/oleander/Documentos/FP/Segundo/Empresa/Pasefesa/logo.png"));
-		new MainFoc(imatge);
+	public static void main(String[] args) {
+		new MainFoc();
 	}
 
 }
