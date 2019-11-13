@@ -5,6 +5,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -17,11 +19,11 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 
-public class ControlPanel extends JPanel implements MouseListener {
+public class ControlPanel extends JPanel implements MouseListener, KeyListener {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private JButton btnXispesBordes, btnXispesLiniaInferior, btnPausa, btnCarregaImg;
+	private JButton btnXispesBordes, btnXispesLiniaInferior, btnPausa;
 	private JTextField rutaImg;
 	private JLabel mostraError;
 	private JSlider jsAlturaFoc;
@@ -36,7 +38,19 @@ public class ControlPanel extends JPanel implements MouseListener {
 			canviaPausa(false);
 		} else if (e.getSource().equals(btnPausa)) {
 			canviaPausa(!this.v.getPausa());
-		} else if (e.getSource().equals(btnCarregaImg)) {
+		}
+	}
+	public void mouseReleased(MouseEvent e) {
+		if (e.getSource().equals(jsAlturaFoc)) {
+			calcularAlturaFoc();
+		}
+	}
+	public void mouseEntered(MouseEvent e) {}
+	public void mouseExited(MouseEvent e) {}
+	public void mousePressed(MouseEvent e) {}
+	
+	public void keyPressed(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			Image img;
 			try {
 				img = ImageIO.read(new File(rutaImg.getText()));
@@ -52,14 +66,8 @@ public class ControlPanel extends JPanel implements MouseListener {
 			}
 		}
 	}
-	public void mouseReleased(MouseEvent e) {
-		if (e.getSource().equals(jsAlturaFoc)) {
-			calcularAlturaFoc();
-		}
-	}
-	public void mouseEntered(MouseEvent e) {}
-	public void mouseExited(MouseEvent e) {}
-	public void mousePressed(MouseEvent e) {}
+	public void keyReleased(KeyEvent e) {}
+	public void keyTyped(KeyEvent e) {}
 	
 	public ControlPanel(Viewer v) {
 		super(new GridBagLayout());
@@ -69,7 +77,7 @@ public class ControlPanel extends JPanel implements MouseListener {
 		b.fill = GridBagConstraints.HORIZONTAL;
 		
 		this.rutaImg = afegirTextFieldNou(rutaImg, "Ruta:", 0, new GridBagConstraints());
-		this.btnCarregaImg = afegirBotoNou(btnCarregaImg, "Carrega", 2, 0, b);
+		this.rutaImg.addKeyListener(this);
 		this.mostraError = afegirLabelNou(mostraError, "", 0, 1, new GridBagConstraints());
 		this.btnXispesBordes = afegirBotoNou(btnXispesBordes, "Generar xispes als bordes", 0, 2, b);
 		this.btnXispesLiniaInferior = afegirBotoNou(this.btnXispesLiniaInferior, "Generar xispes al costat inferior", 0, 3, b);
