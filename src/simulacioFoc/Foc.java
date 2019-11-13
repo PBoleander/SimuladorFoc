@@ -27,7 +27,8 @@ public class Foc extends BufferedImage {
 		this.arrayBytesImatgeFons = ((DataBufferByte) this.imatgeFons.getRaster().getDataBuffer()).getData();
 		
 		this.numCanals = (this.getColorModel().hasAlpha() ? 4 : 3);
-		this.arrayBytesFoc = new byte[ample * alt * this.numCanals];
+		this.setData(Raster.createRaster(this.getSampleModel(), new DataBufferByte(ample * alt * this.numCanals), new Point()));
+		this.arrayBytesFoc = ((DataBufferByte) this.getRaster().getDataBuffer()).getData();
 		this.matriuBordes = new byte[this.arrayBytesImatgeFons.length];
 		
 		PaletaColors pc = new PaletaColors(new Color(0, 0, 0, 0),
@@ -62,11 +63,6 @@ public class Foc extends BufferedImage {
 		colorejarImatge();
 		if (generarXispes)
 			generarXispes(false);
-	}
-	
-	public Foc getFoc() {
-		this.setData(Raster.createRaster(this.getSampleModel(), new DataBufferByte(this.arrayBytesFoc, this.arrayBytesFoc.length), new Point()));
-		return this;
 	}
 	
 	public void setFactorAlturaFoc(double factorAlturaFoc) {

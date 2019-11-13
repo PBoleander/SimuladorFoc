@@ -43,7 +43,7 @@ public class Viewer extends Canvas {
 		
 		bufferGraphics.clearRect(0, 0, imgFons.getWidth(), imgFons.getHeight());
 		bufferGraphics.drawImage(imgFons, 0, 0, this);
-		bufferGraphics.drawImage(f.getFoc(), 0, 0, this);
+		bufferGraphics.drawImage(f, 0, 0, this);
 		
 		g.drawImage(borrador, 0, 0, this.getWidth(), this.getHeight(), null);
 		
