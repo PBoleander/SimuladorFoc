@@ -102,7 +102,9 @@ public class Foc extends BufferedImage {
 					 this.matriuTemperatures[fila][columna + 1] > 0 || this.matriuTemperatures[fila + 1][columna - 1] > 0 ||
 					 this.matriuTemperatures[fila + 1][columna] > 0 || this.matriuTemperatures[fila + 1][columna + 1] > 0) ? true : false);
 		else
-			return this.matriuTemperatures[fila][columna - 1] > 0 || this.matriuTemperatures[fila][columna + 1] > 0 ? true : false;
+			return ((this.matriuTemperatures[fila][columna - 1] > 0 || this.matriuTemperatures[fila][columna + 1] > 0 ||
+				   this.matriuTemperatures[fila - 1][columna - 1] > 0 || this.matriuTemperatures[fila - 1][columna] > 0 ||
+				   this.matriuTemperatures[fila - 1][columna + 1] > 0) ? true : false);
 	}
 	
 	private void detectarBordes() {
