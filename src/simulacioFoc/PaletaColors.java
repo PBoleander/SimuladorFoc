@@ -66,10 +66,10 @@ public class PaletaColors {
 				break;
 			}
 			
-			int nouR = Math.round((float) (this.paleta[i / 85 * 85].getRed() + (i % 85) * deltaR));
-			int nouG = Math.round((float) (this.paleta[i / 85 * 85].getGreen() + (i % 85) * deltaG));
-			int nouB = Math.round((float) (this.paleta[i / 85 * 85].getBlue() + (i % 85) * deltaB));
-			int nouA = Math.round((float) (this.paleta[i / 85 * 85].getAlpha() + (i % 85) * deltaA));
+			int nouR = (int) (this.paleta[i / 85 * 85].getRed() + (i % 85) * deltaR);
+			int nouG = (int) (this.paleta[i / 85 * 85].getGreen() + (i % 85) * deltaG);
+			int nouB = (int) (this.paleta[i / 85 * 85].getBlue() + (i % 85) * deltaB);
+			int nouA = (int) (this.paleta[i / 85 * 85].getAlpha() + (i % 85) * deltaA);
 			
 			this.paleta[i] = corregirColor(nouR, nouG, nouB, nouA);
 		}
