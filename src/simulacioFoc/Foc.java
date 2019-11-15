@@ -19,6 +19,7 @@ public class Foc extends BufferedImage {
 	private boolean xispesABordes;
 	private double factorAlturaFoc;
 	private int vent;
+	private int sensibilitatBordes;
 	
 	public Foc(int ample, int alt, int tipus, BufferedImage imgFons) {
 		super(ample, alt, tipus);
@@ -53,6 +54,9 @@ public class Foc extends BufferedImage {
 		this.factorAlturaFoc = factorAlturaFoc;
 	}
 	
+	public void setSensibilitatBordes(int sb) {
+		this.sensibilitatBordes = sb;
+	}
 	public void setVent(int vent) {
 		this.vent = vent;
 	}
@@ -140,7 +144,7 @@ public class Foc extends BufferedImage {
 	
 	private boolean esBordeAquestPixel(int fila, int columna) {
 		Color c = getColorPixel(this.matriuBordes, this.nCanalsImgFons, columna, fila);
-		return ((c.getBlue() + c.getGreen() + c.getRed() > 50) ? true : false);
+		return ((c.getBlue() + c.getGreen() + c.getRed() >= 3 * 255 - this.sensibilitatBordes) ? true : false);
 	}
 	
 	private void generarXispes(boolean inici) {

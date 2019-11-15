@@ -26,7 +26,7 @@ public class ControlPanel extends JPanel implements MouseListener, KeyListener {
 	private JButton btnXispesBordes, btnXispesLiniaInferior, btnPausa;
 	private JTextField rutaImg;
 	private JLabel mostraError;
-	private JSlider jsAlturaFoc, jsDireccioVent;
+	private JSlider jsAlturaFoc, jsDireccioVent, jsSensibilitatBordes;
 	private Viewer viewer;
 
 	public void mouseClicked(MouseEvent e) {
@@ -45,6 +45,8 @@ public class ControlPanel extends JPanel implements MouseListener, KeyListener {
 			calcularAlturaFoc();
 		} else if (e.getSource().equals(jsDireccioVent)) {
 			this.viewer.getFoc().setVent(jsDireccioVent.getValue());
+		} else if (e.getSource().equals(jsSensibilitatBordes)) {
+			this.viewer.getFoc().setSensibilitatBordes(jsSensibilitatBordes.getValue());
 		}
 	}
 	public void mouseEntered(MouseEvent e) {}
@@ -63,6 +65,7 @@ public class ControlPanel extends JPanel implements MouseListener, KeyListener {
 					this.mostraError.setText(null);
 					calcularAlturaFoc();
 					this.viewer.getFoc().setVent(jsDireccioVent.getValue());
+					this.viewer.getFoc().setSensibilitatBordes(jsSensibilitatBordes.getValue());
 				}
 			} catch (IOException e1) {
 				mostraError.setText("Imatge no trobada");
@@ -89,6 +92,8 @@ public class ControlPanel extends JPanel implements MouseListener, KeyListener {
 		this.jsAlturaFoc = afegirSliderNou(this.jsAlturaFoc, 0, 100, 50, 0, 6, 10, new GridBagConstraints());
 		afegirLabelNou("Direcció vent", 0, 7, new GridBagConstraints());
 		this.jsDireccioVent = afegirSliderNou(this.jsDireccioVent, -1, 1, 0, 0, 8, 1, new GridBagConstraints());
+		afegirLabelNou("Sensibilitat detecció bordes", 0, 9, new GridBagConstraints());
+		this.jsSensibilitatBordes = afegirSliderNou(this.jsSensibilitatBordes, 0, 700, 700, 0, 10, 100, new GridBagConstraints());
 		
 	}
 	
