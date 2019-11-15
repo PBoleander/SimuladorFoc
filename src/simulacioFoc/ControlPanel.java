@@ -27,24 +27,24 @@ public class ControlPanel extends JPanel implements MouseListener, KeyListener {
 	private JTextField rutaImg;
 	private JLabel mostraError;
 	private JSlider jsAlturaFoc, jsDireccioVent;
-	private Viewer v;
+	private Viewer viewer;
 
 	public void mouseClicked(MouseEvent e) {
 		if (e.getSource().equals(btnXispesBordes)) {
-			this.v.getFoc().setXispesABordes(true);
+			this.viewer.getFoc().setXispesABordes(true);
 			canviaPausa(false);
 		} else if (e.getSource().equals(btnXispesLiniaInferior)) {
-			this.v.getFoc().setXispesABordes(false);
+			this.viewer.getFoc().setXispesABordes(false);
 			canviaPausa(false);
 		} else if (e.getSource().equals(btnPausa)) {
-			canviaPausa(!this.v.getPausa());
+			canviaPausa(!this.viewer.getPausa());
 		}
 	}
 	public void mouseReleased(MouseEvent e) {
 		if (e.getSource().equals(jsAlturaFoc)) {
 			calcularAlturaFoc();
 		} else if (e.getSource().equals(jsDireccioVent)) {
-			this.v.getFoc().setVent(jsDireccioVent.getValue());
+			this.viewer.getFoc().setVent(jsDireccioVent.getValue());
 		}
 	}
 	public void mouseEntered(MouseEvent e) {}
@@ -59,9 +59,10 @@ public class ControlPanel extends JPanel implements MouseListener, KeyListener {
 				if (img == null) {
 					this.mostraError.setText("Aquest arxiu no és una imatge");
 				} else {
-					this.v.setImatgeFons(img);
+					this.viewer.setImatgeFons(img);
 					this.mostraError.setText(null);
 					calcularAlturaFoc();
+					this.viewer.getFoc().setVent(jsDireccioVent.getValue());
 				}
 			} catch (IOException e1) {
 				mostraError.setText("Imatge no trobada");
@@ -73,7 +74,7 @@ public class ControlPanel extends JPanel implements MouseListener, KeyListener {
 	
 	public ControlPanel(Viewer v) {
 		super(new GridBagLayout());
-		this.v = v;
+		this.viewer = v;
 		
 		GridBagConstraints b = new GridBagConstraints();
 		b.fill = GridBagConstraints.HORIZONTAL;
@@ -148,13 +149,13 @@ public class ControlPanel extends JPanel implements MouseListener, KeyListener {
 	
 	private void calcularAlturaFoc() {
 		double factorAlturaFoc = 7.485 + 0.0008 * (100 - jsAlturaFoc.getValue());
-		this.v.getFoc().setFactorAlturaFoc(factorAlturaFoc);
+		this.viewer.getFoc().setFactorAlturaFoc(factorAlturaFoc);
 	}
 	
 	private void canviaPausa(boolean pausa) {
-		this.v.setPausa(pausa);
+		this.viewer.setPausa(pausa);
 		this.btnPausa.setText((pausa ? "Reproduir" : "Pausar") + " animació");
-		if (!pausa) this.v.repaint();
+		if (!pausa) this.viewer.repaint();
 	}
 	
 	private void textSliders(JSlider s, int espaiTicks) {

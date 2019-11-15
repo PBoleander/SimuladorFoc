@@ -114,9 +114,9 @@ public class Foc extends BufferedImage {
 	}
 	
 	private void detectarBordes() {
-		int[][] matriu = {{0, 1, 0},
+		int[][] matriu = {{0,  1, 0},
 						  {1, -4, 1},
-						  {0, 1, 0}};
+						  {0,  1, 0}};
 		int nouR, nouG, nouB;
 		
 		for (int filaFons = 1; filaFons < this.getHeight() - 1; filaFons++) {
