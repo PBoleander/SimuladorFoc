@@ -26,7 +26,7 @@ public class ControlPanel extends JPanel implements MouseListener, KeyListener {
 	private JButton btnXispesBordes, btnXispesLiniaInferior, btnPausa;
 	private JTextField rutaImg;
 	private JLabel mostraError;
-	private JSlider jsAlturaFoc;
+	private JSlider jsAlturaFoc, jsDireccioVent;
 	private Viewer v;
 
 	public void mouseClicked(MouseEvent e) {
@@ -43,6 +43,8 @@ public class ControlPanel extends JPanel implements MouseListener, KeyListener {
 	public void mouseReleased(MouseEvent e) {
 		if (e.getSource().equals(jsAlturaFoc)) {
 			calcularAlturaFoc();
+		} else if (e.getSource().equals(jsDireccioVent)) {
+			this.v.getFoc().setVent(jsDireccioVent.getValue());
 		}
 	}
 	public void mouseEntered(MouseEvent e) {}
@@ -84,6 +86,8 @@ public class ControlPanel extends JPanel implements MouseListener, KeyListener {
 		this.btnPausa = afegirBotoNou(this.btnPausa, "Pausar animació", 0, 4, b);
 		afegirLabelNou("Altura foc", 0, 5, new GridBagConstraints());
 		this.jsAlturaFoc = afegirSliderNou(this.jsAlturaFoc, 0, 100, 50, 0, 6, 10, new GridBagConstraints());
+		afegirLabelNou("Direcció vent", 0, 7, new GridBagConstraints());
+		this.jsDireccioVent = afegirSliderNou(this.jsDireccioVent, -1, 1, 0, 0, 8, 1, new GridBagConstraints());
 		
 	}
 	
@@ -137,7 +141,6 @@ public class ControlPanel extends JPanel implements MouseListener, KeyListener {
 		field = new JTextField();
 		t.fill = GridBagConstraints.HORIZONTAL;
 		t.gridx = 1;
-		//t.weightx = 1.0;
 		this.add(field, t);
 		
 		return field;

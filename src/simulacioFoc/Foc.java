@@ -18,6 +18,7 @@ public class Foc extends BufferedImage {
 	private Color[] paleta;
 	private boolean xispesABordes;
 	private double factorAlturaFoc;
+	private int vent;
 	
 	public Foc(int ample, int alt, int tipus, BufferedImage imgFons) {
 		super(ample, alt, tipus);
@@ -52,22 +53,27 @@ public class Foc extends BufferedImage {
 		this.factorAlturaFoc = factorAlturaFoc;
 	}
 	
+	public void setVent(int vent) {
+		this.vent = vent;
+	}
+	
 	public void setXispesABordes(boolean bordes) {
 		this.xispesABordes = bordes;
 		iniciarFoc();
 	}
 	
 	private void actualitzarMatriuT() {
+		double[][] matriuCoeficients = matriuCoeficientsVent(this.vent);
 		for (int fila = this.getHeight() - 2; fila >= 0; fila--) {
 			for (int columna = 1; columna < this.getWidth() - 1; columna++) {
 				if (!this.xispesABordes || (this.xispesABordes && !esBordeAquestPixel(fila, columna))) {
 					this.matriuTemperatures[fila][columna] = 
-							(int) ((this.matriuTemperatures[fila][columna - 1] * 1.25 +
-							this.matriuTemperatures[fila][columna] * 2 +
-							this.matriuTemperatures[fila][columna + 1] * 1.25 +
-							this.matriuTemperatures[fila + 1][columna - 1] * 0.75 +
-							this.matriuTemperatures[fila + 1][columna] * 1.5 +
-							this.matriuTemperatures[fila + 1][columna + 1] * 0.75) / this.factorAlturaFoc);
+							(int) ((this.matriuTemperatures[fila][columna - 1] * matriuCoeficients[0][0] +
+							this.matriuTemperatures[fila][columna] * matriuCoeficients[0][1] +
+							this.matriuTemperatures[fila][columna + 1] * matriuCoeficients[0][2] +
+							this.matriuTemperatures[fila + 1][columna - 1] * matriuCoeficients[1][0] +
+							this.matriuTemperatures[fila + 1][columna] * matriuCoeficients[1][1] +
+							this.matriuTemperatures[fila + 1][columna + 1] * matriuCoeficients[1][2]) / this.factorAlturaFoc);
 					
 					this.matriuTemperatures[fila][columna] = (this.matriuTemperatures[fila][columna] > 255 ? 255 : this.matriuTemperatures[fila][columna]);
 				}
@@ -108,7 +114,9 @@ public class Foc extends BufferedImage {
 	}
 	
 	private void detectarBordes() {
-		int[][] matriu = {{0, 1, 0}, {1, -4, 1}, {0, 1, 0}};
+		int[][] matriu = {{0, 1, 0},
+						  {1, -4, 1},
+						  {0, 1, 0}};
 		int nouR, nouG, nouB;
 		
 		for (int filaFons = 1; filaFons < this.getHeight() - 1; filaFons++) {
@@ -179,6 +187,25 @@ public class Foc extends BufferedImage {
 		inicialitzarMatriuT();
 		inicialitzarArrayBytes();
 		generarXispes(true);
+	}
+	
+	private double[][] matriuCoeficientsVent(int vent) {
+		switch (vent) {
+		case -1:
+			double[][] matriuMenos1 = {{0.0, 2.0, 2.5}, 
+					 				   {0.0, 1.0, 2.0}};
+			return matriuMenos1;
+		case 0:
+			double[][] matriu0 = {{1.25, 2.0, 1.25}, 
+								  {0.75, 1.5, 0.75}};
+			return matriu0;
+		case 1:
+			double[][] matriu1 = {{2.5, 2.0, 0.0}, 
+	 				   			  {2.0, 1.0, 0.0}};
+			return matriu1;
+		default:
+			return null;	
+		}
 	}
 	
 	private int passarXYAIndexArray(int x, int y, int nCanals) {
