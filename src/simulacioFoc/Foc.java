@@ -103,14 +103,14 @@ public class Foc extends BufferedImage {
 	
 	private boolean costatsEncesos(int fila, int columna) {
 		if (this.xispesABordes)
-			return ((this.matriuTemperatures[fila - 1][columna - 1] > 0 || this.matriuTemperatures[fila - 1][columna] > 0 ||
-					 this.matriuTemperatures[fila - 1][columna + 1] > 0 || this.matriuTemperatures[fila][columna - 1] > 0 ||
-					 this.matriuTemperatures[fila][columna + 1] > 0 || this.matriuTemperatures[fila + 1][columna - 1] > 0 ||
-					 this.matriuTemperatures[fila + 1][columna] > 0 || this.matriuTemperatures[fila + 1][columna + 1] > 0) ? true : false);
+			return ((this.matriuTemperatures[fila - 1][columna - 1] > 0 || this.matriuTemperatures[fila - 1][columna	] > 0 ||
+					 this.matriuTemperatures[fila - 1][columna + 1] > 0 || this.matriuTemperatures[fila	   ][columna - 1] > 0 ||
+					 this.matriuTemperatures[fila	 ][columna + 1] > 0 || this.matriuTemperatures[fila + 1][columna - 1] > 0 ||
+					 this.matriuTemperatures[fila + 1][columna	  ] > 0 || this.matriuTemperatures[fila + 1][columna + 1] > 0) ? true : false);
 		else
-			return ((this.matriuTemperatures[fila][columna - 1] > 0 || this.matriuTemperatures[fila][columna + 1] > 0 ||
-				   this.matriuTemperatures[fila - 1][columna - 1] > 0 || this.matriuTemperatures[fila - 1][columna] > 0 ||
-				   this.matriuTemperatures[fila - 1][columna + 1] > 0) ? true : false);
+			return ((this.matriuTemperatures[fila	 ][columna - 1] > 0 || this.matriuTemperatures[fila	   ][columna + 1] > 0 ||
+				     this.matriuTemperatures[fila - 1][columna - 1] > 0 || this.matriuTemperatures[fila - 1][columna	] > 0 ||
+				     this.matriuTemperatures[fila - 1][columna + 1] > 0) ? true : false);
 	}
 	
 	private void detectarBordes() {
@@ -236,7 +236,7 @@ public class Foc extends BufferedImage {
 	private void setColorPixel(byte[] ba, int numCanalsImg, int x, int y, Color c) {
 		int i = passarXYAIndexArray(x, y, numCanalsImg);
 		
-		ba[i] = (byte) c.getBlue();
+		ba[i	] = (byte) c.getBlue();
 		ba[i + 1] = (byte) c.getGreen();
 		ba[i + 2] = (byte) c.getRed();
 		
