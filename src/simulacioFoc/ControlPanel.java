@@ -4,27 +4,22 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
-import java.awt.Insets;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.JTextField;
 
-public class ControlPanel extends JPanel implements MouseListener, KeyListener {
+public class ControlPanel extends JPanel implements MouseListener {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private JButton btnXispesBordes, btnXispesLiniaInferior, btnPausa;
-	private JTextField rutaImg;
+	private JButton btnXispesBordes, btnXispesLiniaInferior, btnPausa, btnTriaImg;
+	final private JFileChooser triadorImg = new JFileChooser();
 	private JLabel mostraError;
 	private JSlider jsAlturaFoc, jsDireccioVent, jsSensibilitatBordes;
 	private Viewer viewer;
@@ -38,6 +33,25 @@ public class ControlPanel extends JPanel implements MouseListener, KeyListener {
 			canviaPausa(false);
 		} else if (e.getSource().equals(btnPausa)) {
 			canviaPausa(!this.viewer.getPausa());
+		} else if (e.getSource().equals(btnTriaImg)) {
+			int valorRetornat = triadorImg.showDialog(null, "Obrir");
+			if (valorRetornat == JFileChooser.APPROVE_OPTION) {
+				Image img;
+				try {
+					img = ImageIO.read(triadorImg.getSelectedFile());
+					if (img == null) {
+						this.mostraError.setText("Aquest arxiu no és una imatge");
+					} else {
+						this.viewer.setImatgeFons(img);
+						this.mostraError.setText(null);
+						calcularAlturaFoc();
+						this.viewer.getFoc().setVent(jsDireccioVent.getValue());
+						this.viewer.getFoc().setSensibilitatBordes(jsSensibilitatBordes.getValue());
+					}
+				} catch (IOException e1) {
+					mostraError.setText("Imatge no trobada");
+				}
+			}
 		}
 	}
 	public void mouseReleased(MouseEvent e) {
@@ -53,28 +67,6 @@ public class ControlPanel extends JPanel implements MouseListener, KeyListener {
 	public void mouseExited(MouseEvent e) {}
 	public void mousePressed(MouseEvent e) {}
 	
-	public void keyPressed(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-			Image img;
-			try {
-				img = ImageIO.read(new File(rutaImg.getText()));
-				if (img == null) {
-					this.mostraError.setText("Aquest arxiu no és una imatge");
-				} else {
-					this.viewer.setImatgeFons(img);
-					this.mostraError.setText(null);
-					calcularAlturaFoc();
-					this.viewer.getFoc().setVent(jsDireccioVent.getValue());
-					this.viewer.getFoc().setSensibilitatBordes(jsSensibilitatBordes.getValue());
-				}
-			} catch (IOException e1) {
-				mostraError.setText("Imatge no trobada");
-			}
-		}
-	}
-	public void keyReleased(KeyEvent e) {}
-	public void keyTyped(KeyEvent e) {}
-	
 	public ControlPanel(Viewer v) {
 		super(new GridBagLayout());
 		this.viewer = v;
@@ -82,8 +74,7 @@ public class ControlPanel extends JPanel implements MouseListener, KeyListener {
 		GridBagConstraints b = new GridBagConstraints();
 		b.fill = GridBagConstraints.HORIZONTAL;
 		
-		this.rutaImg = afegirTextFieldNou(rutaImg, "Ruta:", 0, new GridBagConstraints());
-		this.rutaImg.addKeyListener(this);
+		this.btnTriaImg = afegirBotoNou(this.btnTriaImg, "Tria imatge", 0, 0, b);
 		this.mostraError = afegirLabelNou(mostraError, "", 0, 1, new GridBagConstraints());
 		this.btnXispesBordes = afegirBotoNou(btnXispesBordes, "Generar xispes als bordes", 0, 2, b);
 		this.btnXispesLiniaInferior = afegirBotoNou(this.btnXispesLiniaInferior, "Generar xispes al costat inferior", 0, 3, b);
@@ -136,20 +127,6 @@ public class ControlPanel extends JPanel implements MouseListener, KeyListener {
 		this.add(slider, s);
 		
 		return slider;
-	}
-	
-	private JTextField afegirTextFieldNou(JTextField field, String titol, int y, GridBagConstraints t) {
-		t.gridy = y;
-		t.insets = new Insets(0, -210, 0, 0);
-		JLabel l = new JLabel(titol);
-		this.add(l, t);
-		
-		field = new JTextField();
-		t.fill = GridBagConstraints.HORIZONTAL;
-		t.gridx = 1;
-		this.add(field, t);
-		
-		return field;
 	}
 	
 	private void calcularAlturaFoc() {
