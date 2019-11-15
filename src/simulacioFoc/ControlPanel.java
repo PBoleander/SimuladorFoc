@@ -25,42 +25,47 @@ public class ControlPanel extends JPanel implements MouseListener {
 	private Viewer viewer;
 
 	public void mouseClicked(MouseEvent e) {
-		if (e.getSource().equals(btnXispesBordes)) {
-			this.viewer.getFoc().setXispesABordes(true);
-			canviaPausa(false);
-		} else if (e.getSource().equals(btnXispesLiniaInferior)) {
-			this.viewer.getFoc().setXispesABordes(false);
-			canviaPausa(false);
-		} else if (e.getSource().equals(btnPausa)) {
-			canviaPausa(!this.viewer.getPausa());
-		} else if (e.getSource().equals(btnTriaImg)) {
-			int valorRetornat = triadorImg.showDialog(null, "Obrir");
-			if (valorRetornat == JFileChooser.APPROVE_OPTION) {
-				Image img;
-				try {
-					img = ImageIO.read(triadorImg.getSelectedFile());
-					if (img == null) {
-						this.mostraError.setText("Aquest arxiu no és una imatge");
-					} else {
-						this.viewer.setImatgeFons(img);
-						this.mostraError.setText(null);
-						calcularAlturaFoc();
-						this.viewer.getFoc().setVent(jsDireccioVent.getValue());
-						this.viewer.getFoc().setSensibilitatBordes(jsSensibilitatBordes.getValue());
+		if (e.getSource() instanceof JButton && ((JButton) e.getSource()).isEnabled()) {
+			if (e.getSource().equals(btnXispesBordes)) {
+				this.viewer.getFoc().setXispesABordes(true);
+				canviaPausa(false);
+			} else if (e.getSource().equals(btnXispesLiniaInferior)) {
+				this.viewer.getFoc().setXispesABordes(false);
+				canviaPausa(false);
+			} else if (e.getSource().equals(btnPausa)) {
+				canviaPausa(!this.viewer.getPausa());
+			} else if (e.getSource().equals(btnTriaImg)) {
+				int valorRetornat = triadorImg.showDialog(null, "Obrir");
+				if (valorRetornat == JFileChooser.APPROVE_OPTION) {
+					Image img;
+					try {
+						img = ImageIO.read(triadorImg.getSelectedFile());
+						if (img == null) {
+							this.mostraError.setText("Aquest arxiu no és una imatge");
+						} else {
+							this.viewer.setImatgeFons(img);
+							this.mostraError.setText(null);
+							activarTotsElsObjectes();
+							calcularAlturaFoc();
+							this.viewer.getFoc().setVent(jsDireccioVent.getValue());
+							this.viewer.getFoc().setSensibilitatBordes(jsSensibilitatBordes.getValue());
+						}
+					} catch (IOException e1) {
+						mostraError.setText("Imatge no trobada");
 					}
-				} catch (IOException e1) {
-					mostraError.setText("Imatge no trobada");
 				}
 			}
 		}
 	}
 	public void mouseReleased(MouseEvent e) {
-		if (e.getSource().equals(jsAlturaFoc)) {
-			calcularAlturaFoc();
-		} else if (e.getSource().equals(jsDireccioVent)) {
-			this.viewer.getFoc().setVent(jsDireccioVent.getValue());
-		} else if (e.getSource().equals(jsSensibilitatBordes)) {
-			this.viewer.getFoc().setSensibilitatBordes(jsSensibilitatBordes.getValue());
+		if (e.getSource() instanceof JSlider && ((JSlider) e.getSource()).isEnabled()) {
+			if (e.getSource().equals(jsAlturaFoc)) {
+				calcularAlturaFoc();
+			} else if (e.getSource().equals(jsDireccioVent)) {
+				this.viewer.getFoc().setVent(jsDireccioVent.getValue());
+			} else if (e.getSource().equals(jsSensibilitatBordes)) {
+				this.viewer.getFoc().setSensibilitatBordes(jsSensibilitatBordes.getValue());
+			}
 		}
 	}
 	public void mouseEntered(MouseEvent e) {}
@@ -74,23 +79,33 @@ public class ControlPanel extends JPanel implements MouseListener {
 		GridBagConstraints b = new GridBagConstraints();
 		b.fill = GridBagConstraints.HORIZONTAL;
 		
-		this.btnTriaImg = afegirBotoNou(this.btnTriaImg, "Tria imatge", 0, 0, b);
+		this.btnTriaImg = afegirBotoNou(this.btnTriaImg, "Tria imatge", 0, 0, true, b);
 		this.mostraError = afegirLabelNou(mostraError, "", 0, 1, new GridBagConstraints());
-		this.btnXispesBordes = afegirBotoNou(btnXispesBordes, "Generar xispes als bordes", 0, 2, b);
-		this.btnXispesLiniaInferior = afegirBotoNou(this.btnXispesLiniaInferior, "Generar xispes al costat inferior", 0, 3, b);
-		this.btnPausa = afegirBotoNou(this.btnPausa, "Pausar animació", 0, 4, b);
+		this.btnXispesBordes = afegirBotoNou(btnXispesBordes, "Generar xispes als bordes", 0, 2, false, b);
+		this.btnXispesLiniaInferior = afegirBotoNou(this.btnXispesLiniaInferior, "Generar xispes al costat inferior", 0, 3, false, b);
+		this.btnPausa = afegirBotoNou(this.btnPausa, "Pausar animació", 0, 4, false, b);
 		afegirLabelNou("Altura foc", 0, 5, new GridBagConstraints());
-		this.jsAlturaFoc = afegirSliderNou(this.jsAlturaFoc, 0, 100, 50, 0, 6, 10, new GridBagConstraints());
+		this.jsAlturaFoc = afegirSliderNou(this.jsAlturaFoc, 0, 100, 50, 0, 6, 10, false, new GridBagConstraints());
 		afegirLabelNou("Direcció vent", 0, 7, new GridBagConstraints());
-		this.jsDireccioVent = afegirSliderNou(this.jsDireccioVent, -1, 1, 0, 0, 8, 1, new GridBagConstraints());
+		this.jsDireccioVent = afegirSliderNou(this.jsDireccioVent, -1, 1, 0, 0, 8, 1, false, new GridBagConstraints());
 		afegirLabelNou("Sensibilitat detecció bordes", 0, 9, new GridBagConstraints());
-		this.jsSensibilitatBordes = afegirSliderNou(this.jsSensibilitatBordes, 0, 700, 700, 0, 10, 100, new GridBagConstraints());
+		this.jsSensibilitatBordes = afegirSliderNou(this.jsSensibilitatBordes, 0, 700, 700, 0, 10, 100, false, new GridBagConstraints());
 		
 	}
 	
-	private JButton afegirBotoNou(JButton boto, String titol, int x, int y, GridBagConstraints b) {
+	private void activarTotsElsObjectes() {
+		this.btnPausa.setEnabled(true);
+		this.btnXispesBordes.setEnabled(true);
+		this.btnXispesLiniaInferior.setEnabled(true);
+		this.jsAlturaFoc.setEnabled(true);
+		this.jsDireccioVent.setEnabled(true);
+		this.jsSensibilitatBordes.setEnabled(true);
+	}
+	
+	private JButton afegirBotoNou(JButton boto, String titol, int x, int y, boolean enabled, GridBagConstraints b) {
 		boto = new JButton(titol);
 		boto.addMouseListener(this);
+		boto.setEnabled(enabled);
 		b.gridx = x;
 		b.gridy = y;
 		this.add(boto, b);
@@ -115,9 +130,10 @@ public class ControlPanel extends JPanel implements MouseListener {
 		return label;
 	}
 	
-	private JSlider afegirSliderNou(JSlider slider, int valorMinim, int valorMaxim, int valorInicial, int x, int y, int espaiTicks, GridBagConstraints s) {
+	private JSlider afegirSliderNou(JSlider slider, int valorMinim, int valorMaxim, int valorInicial, int x, int y, int espaiTicks, boolean enabled, GridBagConstraints s) {
 		slider = new JSlider(valorMinim, valorMaxim, valorInicial);
 		slider.addMouseListener(this);
+		slider.setEnabled(enabled);
 		textSliders(slider, espaiTicks);
 		s.gridx = x;
 		s.gridy = y;

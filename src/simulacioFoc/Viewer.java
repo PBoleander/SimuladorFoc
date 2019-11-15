@@ -34,7 +34,7 @@ public class Viewer extends Canvas {
 	@Override
 	public void paint(Graphics g) {
 		if (this.imgFons == null) {
-			String s = "Tria una imatge al quadre 'Ruta'";
+			String s = "Tria una imatge per començar el foc";
 			int longitudEnPixelsString = g.getFontMetrics().stringWidth(s);
 			g.drawString(s, (this.getWidth() - longitudEnPixelsString) / 2, this.getHeight() / 2);
 		} else {
