@@ -37,9 +37,8 @@ public class ControlPanel extends JPanel implements MouseListener {
 			} else if (e.getSource().equals(btnTriaImg)) {
 				int valorRetornat = triadorImg.showDialog(null, "Obrir");
 				if (valorRetornat == JFileChooser.APPROVE_OPTION) {
-					Image img;
 					try {
-						img = ImageIO.read(triadorImg.getSelectedFile());
+						Image img = ImageIO.read(triadorImg.getSelectedFile());
 						if (img == null) {
 							this.mostraError.setText("Aquest arxiu no és una imatge");
 						} else {
