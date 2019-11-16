@@ -147,7 +147,7 @@ public class ControlPanel extends JPanel implements MouseListener {
 	
 	private void calcularAlturaFoc() {
 		double factorAlturaFoc = 7.485 + 0.0008 * (100 - jsAlturaFoc.getValue());
-		this.viewer.getFoc().setFactorAlturaFoc(factorAlturaFoc);
+		this.viewer.getFoc().setFactorAltura(factorAlturaFoc);
 	}
 	
 	private void canviaPausa(boolean pausa) {

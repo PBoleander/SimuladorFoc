@@ -14,10 +14,10 @@ public class Foc extends BufferedImage {
 	private byte[] arrayBytesImatgeFons;
 	private int nCanalsImgFons;
 	private int[][] matriuTemperatures;
-	private byte[] matriuBordes;
+	private byte[] matriuBordesImgFons;
 	private Color[] paleta;
 	private boolean xispesABordes;
-	private double factorAlturaFoc;
+	private double factorAltura;
 	private int vent;
 	private int sensibilitatBordes;
 	
@@ -31,7 +31,7 @@ public class Foc extends BufferedImage {
 		this.numCanals = (this.getColorModel().hasAlpha() ? 4 : 3);
 		this.setData(Raster.createRaster(this.getSampleModel(), new DataBufferByte(ample * alt * this.numCanals), new Point()));
 		this.arrayBytesFoc = ((DataBufferByte) this.getRaster().getDataBuffer()).getData();
-		this.matriuBordes = new byte[this.arrayBytesImatgeFons.length];
+		this.matriuBordesImgFons = new byte[this.arrayBytesImatgeFons.length];
 		
 		PaletaColors pc = new PaletaColors(new Color(100, 100, 100, 0),
 										   new Color(150, 150, 150, 50),
@@ -41,17 +41,22 @@ public class Foc extends BufferedImage {
 		
 		this.xispesABordes = false;
 		
-		iniciarFoc();
+		detectarBordes();
+		iniciar();
 	}
 	
-	public void actualitzarFoc(boolean generarXispes) {
+	public void actualitzar(boolean generarXispes) {
 		actualitzarMatriuT();
 		colorejarImatge();
 		if (generarXispes) generarXispes(false);
 	}
 	
-	public void setFactorAlturaFoc(double factorAlturaFoc) {
-		this.factorAlturaFoc = factorAlturaFoc;
+	public byte[] getMatriuBordesImgFons() {
+		return this.matriuBordesImgFons;
+	}
+	
+	public void setFactorAltura(double factorAlturaFoc) {
+		this.factorAltura = factorAlturaFoc;
 	}
 	
 	public void setSensibilitatBordes(int sb) {
@@ -63,7 +68,7 @@ public class Foc extends BufferedImage {
 	
 	public void setXispesABordes(boolean bordes) {
 		this.xispesABordes = bordes;
-		iniciarFoc();
+		iniciar();
 	}
 	
 	private void actualitzarMatriuT() {
@@ -77,7 +82,7 @@ public class Foc extends BufferedImage {
 									this.matriuTemperatures[fila	][columna + 1] * matriuCoeficients[0][2] +
 									this.matriuTemperatures[fila + 1][columna - 1] * matriuCoeficients[1][0] +
 									this.matriuTemperatures[fila + 1][columna	 ] * matriuCoeficients[1][1] +
-									this.matriuTemperatures[fila + 1][columna + 1] * matriuCoeficients[1][2]) / this.factorAlturaFoc);
+									this.matriuTemperatures[fila + 1][columna + 1] * matriuCoeficients[1][2]) / this.factorAltura);
 					
 					this.matriuTemperatures[fila][columna] = (this.matriuTemperatures[fila][columna] > 255 ? 255 : this.matriuTemperatures[fila][columna]);
 				}
@@ -137,20 +142,17 @@ public class Foc extends BufferedImage {
 					}
 				}
 				
-				setColorPixel(this.matriuBordes, this.nCanalsImgFons, columnaFons, filaFons, corregirColor(nouR, nouG, nouB));
+				setColorPixel(this.matriuBordesImgFons, this.nCanalsImgFons, columnaFons, filaFons, corregirColor(nouR, nouG, nouB));
 			}
 		}
 	}
 	
 	private boolean esBordeAquestPixel(int fila, int columna) {
-		Color c = getColorPixel(this.matriuBordes, this.nCanalsImgFons, columna, fila);
+		Color c = getColorPixel(this.matriuBordesImgFons, this.nCanalsImgFons, columna, fila);
 		return ((c.getBlue() + c.getGreen() + c.getRed() >= 3 * 255 - this.sensibilitatBordes) ? true : false);
 	}
 	
 	private void generarXispes(boolean inici) {
-		if (inici && this.xispesABordes)
-			detectarBordes();
-		
 		int filaInici, filaFi;
 		if (this.xispesABordes) {
 			filaInici = 1;
@@ -187,7 +189,7 @@ public class Foc extends BufferedImage {
 		}
 	}
 	
-	private void iniciarFoc() {
+	private void iniciar() {
 		inicialitzarMatriuT();
 		inicialitzarArrayBytes();
 		generarXispes(true);
