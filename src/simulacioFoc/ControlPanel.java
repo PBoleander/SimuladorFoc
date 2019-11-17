@@ -1,9 +1,12 @@
 package simulacioFoc;
 
+import java.awt.Choice;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
@@ -15,7 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 
-public class ControlPanel extends JPanel implements MouseListener {
+public class ControlPanel extends JPanel implements MouseListener, ItemListener {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -24,6 +27,7 @@ public class ControlPanel extends JPanel implements MouseListener {
 	private JLabel mostraError;
 	private JSlider jsAlturaFoc, jsDireccioVent, jsSensibilitatBordes;
 	private JRadioButton rbAmpliarRes, rbAmpliarFons, rbAmpliarConvolucio, rbAmpliarFoc;
+	private Choice triaTipusBorde;
 	private Viewer viewer;
 
 	public void mouseClicked(MouseEvent e) {
@@ -88,6 +92,12 @@ public class ControlPanel extends JPanel implements MouseListener {
 		}
 	}
 	
+	public void itemStateChanged(ItemEvent e) {		
+		this.viewer.getFoc().setTipusBorde(this.triaTipusBorde.getSelectedIndex());
+		this.viewer.setPintarImatgesFixes(true);
+		this.viewer.repaint();
+	}
+	
 	public ControlPanel(Viewer v) {
 		super(new GridBagLayout());
 		this.viewer = v;
@@ -100,17 +110,26 @@ public class ControlPanel extends JPanel implements MouseListener {
 		this.btnPausa = afegirBotoNou(this.btnPausa, "Pausar", 1, 1, false, b);
 		this.btnXispesBordes = afegirBotoNou(btnXispesBordes, "Xispes als bordes", 0, 2, false, b);
 		this.btnXispesLiniaInferior = afegirBotoNou(this.btnXispesLiniaInferior, "Xispes a base", 1, 2, false, b);
+		
 		afegirLabelNou("Altura foc", 0, 5, new GridBagConstraints());
 		this.jsAlturaFoc = afegirSliderNou(this.jsAlturaFoc, 0, 100, 50, 0, 6, 10, false, new GridBagConstraints());
+		
 		afegirLabelNou("Direcció vent", 0, 7, new GridBagConstraints());
 		this.jsDireccioVent = afegirSliderNou(this.jsDireccioVent, -1, 1, 0, 0, 8, 1, false, new GridBagConstraints());
+		
 		afegirLabelNou("Sensibilitat detecció bordes", 0, 9, new GridBagConstraints());
 		this.jsSensibilitatBordes = afegirSliderNou(this.jsSensibilitatBordes, 0, 700, 700, 0, 10, 100, false, new GridBagConstraints());
+		
 		afegirLabelNou("Imatge a ampliar", 0, 11, new GridBagConstraints());
 		this.rbAmpliarRes = afegirRadioNou(this.rbAmpliarRes, "Cap", 0, 12, true, new GridBagConstraints());
 		this.rbAmpliarFons = afegirRadioNou(this.rbAmpliarFons, "Fons", 1, 12, false, new GridBagConstraints());
 		this.rbAmpliarConvolucio = afegirRadioNou(this.rbAmpliarConvolucio, "Convolucionada", 0, 13, false, new GridBagConstraints());
 		this.rbAmpliarFoc = afegirRadioNou(this.rbAmpliarFoc, "Resultat", 1, 13, false, new GridBagConstraints());
+		
+		GridBagConstraints l = new GridBagConstraints();
+		l.anchor = GridBagConstraints.WEST;
+		afegirLabelNou("Borde de convolució", 0, 14, l);
+		this.triaTipusBorde = afegirChoiceBordes(this.triaTipusBorde, 1, 14, new GridBagConstraints());
 	}
 	
 	private void activarTotsElsObjectes() {
@@ -133,6 +152,22 @@ public class ControlPanel extends JPanel implements MouseListener {
 		return boto;
 	}
 	
+	private Choice afegirChoiceBordes(Choice choice, int x, int y, GridBagConstraints c) {
+		choice = new Choice();
+		choice.add("Ambdós");
+		choice.add("Horizontal");
+		choice.add("Vertical");
+		choice.select(0);
+		
+		choice.addItemListener(this);
+		
+		c.gridx = x;
+		c.gridy = y;
+		
+		this.add(choice, c);
+		return choice;
+	}
+	
 	private void afegirLabelNou(String titol, int x, int y, GridBagConstraints l) {
 		JLabel label = new JLabel(titol);
 		l.gridx = x;
@@ -151,9 +186,8 @@ public class ControlPanel extends JPanel implements MouseListener {
 	}
 	
 	private JRadioButton afegirRadioNou(JRadioButton radio, String titol, int x, int y, boolean selected, GridBagConstraints r) {
-		radio = new JRadioButton(titol);
+		radio = new JRadioButton(titol, selected);
 		radio.addMouseListener(this);
-		radio.setSelected(selected);
 		
 		r.gridx = x;
 		r.gridy = y;
@@ -202,5 +236,4 @@ public class ControlPanel extends JPanel implements MouseListener {
 		s.setPaintTicks(true);
 		s.setPaintLabels(true);
 	}
-
 }

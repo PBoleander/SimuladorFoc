@@ -20,6 +20,7 @@ public class Foc extends BufferedImage {
 	private double factorAltura;
 	private int vent;
 	private int sensibilitatBordes;
+	private int tipusBorde;
 	
 	public Foc(int ample, int alt, int tipus, BufferedImage imgFons) {
 		super(ample, alt, tipus);
@@ -41,7 +42,7 @@ public class Foc extends BufferedImage {
 		
 		this.xispesABordes = false;
 		
-		detectarBordes();
+		detectarBordes(this.tipusBorde);
 		iniciar();
 	}
 	
@@ -61,6 +62,10 @@ public class Foc extends BufferedImage {
 	
 	public void setSensibilitatBordes(int sb) {
 		this.sensibilitatBordes = sb;
+	}
+	public void setTipusBorde(int tipusBorde) {
+		this.tipusBorde = tipusBorde;
+		detectarBordes(tipusBorde);
 	}
 	public void setVent(int vent) {
 		this.vent = vent;
@@ -122,10 +127,8 @@ public class Foc extends BufferedImage {
 				     this.matriuTemperatures[fila - 1][columna + 1] > 0) ? true : false);
 	}
 	
-	private void detectarBordes() {
-		int[][] matriu = {{0,  1, 0},
-						  {1, -4, 1},
-						  {0,  1, 0}};
+	private void detectarBordes(int tipusBordes) {
+		int[][] matriu = matriuConvolucioBordes(tipusBordes);
 		int nouR, nouG, nouB;
 		
 		for (int filaFons = 1; filaFons < this.getHeight() - 1; filaFons++) {
@@ -211,6 +214,26 @@ public class Foc extends BufferedImage {
 			return matriu1;
 		default:
 			return null;	
+		}
+	}
+	
+	private int[][] matriuConvolucioBordes(int tipusBordes) {
+		switch (tipusBordes) {
+		case 1:
+			int[][] matriu1 = {{ 1,  2,  1},
+							   { 0,  0,  0},
+							   {-1, -2, -1}};
+			return matriu1;
+		case 2:
+			int[][] matriu2 = {{-1, 0, 1},
+							   {-2, 0, 2},
+							   {-1, 0, 1}};
+			return matriu2;
+		default:
+			int[][] matriu0 = {{0,  1, 0},
+					  		   {1, -4, 1},
+					  		   {0,  1, 0}};
+			return matriu0;
 		}
 	}
 	

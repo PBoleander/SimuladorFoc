@@ -97,6 +97,7 @@ public class Viewer extends Canvas implements ComponentListener {
 	public void setAmpliacio(int ampliacio) {
 		if (ampliacio == 0) this.pintarImatgesFixes = true;
 		this.ampliacio = ampliacio;
+		netejarViewer();
 	}
 	
 	public void setImatgeFons(Image i) {
@@ -105,11 +106,16 @@ public class Viewer extends Canvas implements ComponentListener {
 		this.numRepaint = 0;
 		this.pausa = false;
 		this.pintarImatgesFixes = true;
+		netejarViewer();
 		repaint();
 	}
 	
 	public void setPausa(boolean pausa) {
 		this.pausa = pausa;
+	}
+	
+	public void setPintarImatgesFixes(boolean pif) {
+		this.pintarImatgesFixes = pif;
 	}
 	
 	@Override
@@ -129,6 +135,10 @@ public class Viewer extends Canvas implements ComponentListener {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void netejarViewer() {
+		this.getGraphics().clearRect(0, 0, this.getWidth(), this.getHeight());
 	}
 	
 	private void pintaImatgeConvolucionada(Graphics g, int x, int y, int ample, int alt) {
