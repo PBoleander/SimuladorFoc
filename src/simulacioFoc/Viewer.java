@@ -71,6 +71,7 @@ public class Viewer extends Canvas implements ComponentListener {
 				pintaFoc(g, 0, 0, this.getWidth(), this.getHeight());
 				
 				if (!pausa) {
+					esperarMilisegons(10);
 					actualitzarFoc();
 					repaint();
 				}
@@ -85,6 +86,7 @@ public class Viewer extends Canvas implements ComponentListener {
 				pintaFoc(g, this.getWidth() / 2, 0, this.getWidth() / 2, this.getHeight());
 				
 				if (!pausa) {
+					esperarMilisegons(10);
 					actualitzarFoc();
 					repaint();
 				}
@@ -116,15 +118,17 @@ public class Viewer extends Canvas implements ComponentListener {
 	}
 	
 	private void actualitzarFoc() {
-		try {
-			TimeUnit.MILLISECONDS.sleep(10);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
 		numRepaint++;
 		boolean actualitzarXispa = (numRepaint % 5 == 0 ? true : false);
 		foc.actualitzar(actualitzarXispa);
+	}
+	
+	private void esperarMilisegons(int ms) {
+		try {
+			TimeUnit.MILLISECONDS.sleep(ms);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void pintaImatgeConvolucionada(Graphics g, int x, int y, int ample, int alt) {
