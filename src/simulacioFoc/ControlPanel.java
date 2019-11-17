@@ -30,6 +30,7 @@ public class ControlPanel extends JPanel implements MouseListener, ItemListener 
 	private JSlider jsAlturaFoc, jsDireccioVent, jsSensibilitatBordes;
 	private Viewer viewer;
 
+	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getSource().equals(rbAmpliarConvolucio)) {
 			this.viewer.setAmpliacio(2);
@@ -46,6 +47,7 @@ public class ControlPanel extends JPanel implements MouseListener, ItemListener 
 			this.viewer.repaint();
 		}
 	}
+	@Override
 	public void mouseReleased(MouseEvent e) {
 		if (e.getSource() instanceof JSlider && ((JSlider) e.getSource()).isEnabled()) {
 			if (e.getSource().equals(jsAlturaFoc)) {
@@ -57,8 +59,11 @@ public class ControlPanel extends JPanel implements MouseListener, ItemListener 
 			}
 		}
 	}
+	@Override
 	public void mouseEntered(MouseEvent e) {}
+	@Override
 	public void mouseExited(MouseEvent e) {}
+	@Override
 	public void mousePressed(MouseEvent e) {
 		if (e.getSource() instanceof JButton && ((JButton) e.getSource()).isEnabled()) {
 			if (e.getSource().equals(btnXispesBordes)) {
@@ -92,6 +97,7 @@ public class ControlPanel extends JPanel implements MouseListener, ItemListener 
 		}
 	}
 	
+	@Override
 	public void itemStateChanged(ItemEvent e) {		
 		this.viewer.getFoc().setTipusBorde(this.triaTipusBorde.getSelectedIndex());
 		this.viewer.setPintarImatgesFixes(true);

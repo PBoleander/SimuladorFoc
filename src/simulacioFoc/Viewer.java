@@ -24,12 +24,16 @@ public class Viewer extends Canvas implements ComponentListener {
 	private boolean pausa;
 	private boolean pintarImatgesFixes;
 	
+	@Override
 	public void componentHidden(ComponentEvent e) {}
+	@Override
 	public void componentMoved(ComponentEvent e) {}
+	@Override
 	public void componentResized(ComponentEvent e) {
 		this.pintarImatgesFixes = true;
 		repaint();
 	}
+	@Override
 	public void componentShown(ComponentEvent e) {
 		this.pintarImatgesFixes = true;
 		repaint();
