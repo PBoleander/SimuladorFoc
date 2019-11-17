@@ -223,10 +223,10 @@ public class ControlPanel extends JPanel implements MouseListener, ItemListener 
 	}
 	
 	private void setTotsSelectedRadios(boolean selected) {
-		this.rbAmpliarConvolucio.setSelected(false);
-		this.rbAmpliarFoc.setSelected(false);
-		this.rbAmpliarFons.setSelected(false);
-		this.rbAmpliarRes.setSelected(false);
+		this.rbAmpliarConvolucio.setSelected(selected);
+		this.rbAmpliarFoc.setSelected(selected);
+		this.rbAmpliarFons.setSelected(selected);
+		this.rbAmpliarRes.setSelected(selected);
 	}
 	
 	private void textSliders(JSlider s, int espaiTicks) {

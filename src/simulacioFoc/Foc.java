@@ -219,17 +219,17 @@ public class Foc extends BufferedImage {
 	
 	private int[][] matriuConvolucioBordes(int tipusBordes) {
 		switch (tipusBordes) {
-		case 1:
+		case 1: // Horizontal
 			int[][] matriu1 = {{ 1,  2,  1},
 							   { 0,  0,  0},
 							   {-1, -2, -1}};
 			return matriu1;
-		case 2:
+		case 2: // Vertical
 			int[][] matriu2 = {{-1, 0, 1},
 							   {-2, 0, 2},
 							   {-1, 0, 1}};
 			return matriu2;
-		default:
+		default: // Ambdós
 			int[][] matriu0 = {{0,  1, 0},
 					  		   {1, -4, 1},
 					  		   {0,  1, 0}};
