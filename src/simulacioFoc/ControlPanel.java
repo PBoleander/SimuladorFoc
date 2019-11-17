@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 
 public class ControlPanel extends JPanel implements MouseListener {
@@ -22,9 +23,39 @@ public class ControlPanel extends JPanel implements MouseListener {
 	final private JFileChooser triadorImg = new JFileChooser();
 	private JLabel mostraError;
 	private JSlider jsAlturaFoc, jsDireccioVent, jsSensibilitatBordes;
+	private JRadioButton rbAmpliarRes, rbAmpliarFons, rbAmpliarConvolucio, rbAmpliarFoc;
 	private Viewer viewer;
 
 	public void mouseClicked(MouseEvent e) {
+		if (e.getSource().equals(rbAmpliarConvolucio)) {
+			this.viewer.setAmpliacio(2);
+		} else if (e.getSource().equals(rbAmpliarFoc)) {
+			this.viewer.setAmpliacio(3);
+		} else if (e.getSource().equals(rbAmpliarFons)) {
+			this.viewer.setAmpliacio(1);
+		} else if (e.getSource().equals(rbAmpliarRes)) {
+			this.viewer.setAmpliacio(0);
+		}
+		if (e.getSource() instanceof JRadioButton) {
+			setTotsSelectedRadios(false);
+			((JRadioButton) e.getSource()).setSelected(true);
+			this.viewer.repaint();
+		}
+	}
+	public void mouseReleased(MouseEvent e) {
+		if (e.getSource() instanceof JSlider && ((JSlider) e.getSource()).isEnabled()) {
+			if (e.getSource().equals(jsAlturaFoc)) {
+				this.viewer.getFoc().setFactorAltura(calcularAlturaFoc());
+			} else if (e.getSource().equals(jsDireccioVent)) {
+				this.viewer.getFoc().setVent(jsDireccioVent.getValue());
+			} else if (e.getSource().equals(jsSensibilitatBordes)) {
+				this.viewer.getFoc().setSensibilitatBordes(jsSensibilitatBordes.getValue());
+			}
+		}
+	}
+	public void mouseEntered(MouseEvent e) {}
+	public void mouseExited(MouseEvent e) {}
+	public void mousePressed(MouseEvent e) {
 		if (e.getSource() instanceof JButton && ((JButton) e.getSource()).isEnabled()) {
 			if (e.getSource().equals(btnXispesBordes)) {
 				this.viewer.getFoc().setXispesABordes(true);
@@ -45,7 +76,7 @@ public class ControlPanel extends JPanel implements MouseListener {
 							this.viewer.setImatgeFons(img);
 							this.mostraError.setText(null);
 							activarTotsElsObjectes();
-							calcularAlturaFoc();
+							this.viewer.getFoc().setFactorAltura(calcularAlturaFoc());
 							this.viewer.getFoc().setVent(jsDireccioVent.getValue());
 							this.viewer.getFoc().setSensibilitatBordes(jsSensibilitatBordes.getValue());
 						}
@@ -56,20 +87,6 @@ public class ControlPanel extends JPanel implements MouseListener {
 			}
 		}
 	}
-	public void mouseReleased(MouseEvent e) {
-		if (e.getSource() instanceof JSlider && ((JSlider) e.getSource()).isEnabled()) {
-			if (e.getSource().equals(jsAlturaFoc)) {
-				calcularAlturaFoc();
-			} else if (e.getSource().equals(jsDireccioVent)) {
-				this.viewer.getFoc().setVent(jsDireccioVent.getValue());
-			} else if (e.getSource().equals(jsSensibilitatBordes)) {
-				this.viewer.getFoc().setSensibilitatBordes(jsSensibilitatBordes.getValue());
-			}
-		}
-	}
-	public void mouseEntered(MouseEvent e) {}
-	public void mouseExited(MouseEvent e) {}
-	public void mousePressed(MouseEvent e) {}
 	
 	public ControlPanel(Viewer v) {
 		super(new GridBagLayout());
@@ -78,18 +95,22 @@ public class ControlPanel extends JPanel implements MouseListener {
 		GridBagConstraints b = new GridBagConstraints();
 		b.fill = GridBagConstraints.HORIZONTAL;
 		
-		this.btnTriaImg = afegirBotoNou(this.btnTriaImg, "Tria imatge", 0, 0, true, b);
-		this.mostraError = afegirLabelNou(mostraError, "", 0, 1, new GridBagConstraints());
-		this.btnXispesBordes = afegirBotoNou(btnXispesBordes, "Generar xispes als bordes", 0, 2, false, b);
-		this.btnXispesLiniaInferior = afegirBotoNou(this.btnXispesLiniaInferior, "Generar xispes al costat inferior", 0, 3, false, b);
-		this.btnPausa = afegirBotoNou(this.btnPausa, "Pausar animació", 0, 4, false, b);
+		this.mostraError = afegirLabelNou(mostraError, "", 0, 0, new GridBagConstraints());
+		this.btnTriaImg = afegirBotoNou(this.btnTriaImg, "Tria imatge", 0, 1, true, b);
+		this.btnPausa = afegirBotoNou(this.btnPausa, "Pausar", 1, 1, false, b);
+		this.btnXispesBordes = afegirBotoNou(btnXispesBordes, "Xispes als bordes", 0, 2, false, b);
+		this.btnXispesLiniaInferior = afegirBotoNou(this.btnXispesLiniaInferior, "Xispes a base", 1, 2, false, b);
 		afegirLabelNou("Altura foc", 0, 5, new GridBagConstraints());
 		this.jsAlturaFoc = afegirSliderNou(this.jsAlturaFoc, 0, 100, 50, 0, 6, 10, false, new GridBagConstraints());
 		afegirLabelNou("Direcció vent", 0, 7, new GridBagConstraints());
 		this.jsDireccioVent = afegirSliderNou(this.jsDireccioVent, -1, 1, 0, 0, 8, 1, false, new GridBagConstraints());
 		afegirLabelNou("Sensibilitat detecció bordes", 0, 9, new GridBagConstraints());
 		this.jsSensibilitatBordes = afegirSliderNou(this.jsSensibilitatBordes, 0, 700, 700, 0, 10, 100, false, new GridBagConstraints());
-		
+		afegirLabelNou("Imatge a ampliar", 0, 11, new GridBagConstraints());
+		this.rbAmpliarRes = afegirRadioNou(this.rbAmpliarRes, "Cap", 0, 12, true, new GridBagConstraints());
+		this.rbAmpliarFons = afegirRadioNou(this.rbAmpliarFons, "Fons", 1, 12, false, new GridBagConstraints());
+		this.rbAmpliarConvolucio = afegirRadioNou(this.rbAmpliarConvolucio, "Convolucionada", 0, 13, false, new GridBagConstraints());
+		this.rbAmpliarFoc = afegirRadioNou(this.rbAmpliarFoc, "Resultat", 1, 13, false, new GridBagConstraints());
 	}
 	
 	private void activarTotsElsObjectes() {
@@ -129,6 +150,19 @@ public class ControlPanel extends JPanel implements MouseListener {
 		return label;
 	}
 	
+	private JRadioButton afegirRadioNou(JRadioButton radio, String titol, int x, int y, boolean selected, GridBagConstraints r) {
+		radio = new JRadioButton(titol);
+		radio.addMouseListener(this);
+		radio.setSelected(selected);
+		
+		r.gridx = x;
+		r.gridy = y;
+		r.anchor = GridBagConstraints.WEST;
+		
+		this.add(radio, r);
+		return radio;
+	}
+	
 	private JSlider afegirSliderNou(JSlider slider, int valorMinim, int valorMaxim, int valorInicial, int x, int y, int espaiTicks, boolean enabled, GridBagConstraints s) {
 		slider = new JSlider(valorMinim, valorMaxim, valorInicial);
 		slider.addMouseListener(this);
@@ -144,15 +178,21 @@ public class ControlPanel extends JPanel implements MouseListener {
 		return slider;
 	}
 	
-	private void calcularAlturaFoc() {
-		double factorAlturaFoc = 7.485 + 0.0008 * (100 - jsAlturaFoc.getValue());
-		this.viewer.getFoc().setFactorAltura(factorAlturaFoc);
+	private double calcularAlturaFoc() {
+		return 7.485 + 0.0008 * (100 - jsAlturaFoc.getValue());
 	}
 	
 	private void canviaPausa(boolean pausa) {
 		this.viewer.setPausa(pausa);
-		this.btnPausa.setText((pausa ? "Reproduir" : "Pausar") + " animació");
+		this.btnPausa.setText(pausa ? "Reproduir" : "Pausar");
 		if (!pausa) this.viewer.repaint();
+	}
+	
+	private void setTotsSelectedRadios(boolean selected) {
+		this.rbAmpliarConvolucio.setSelected(false);
+		this.rbAmpliarFoc.setSelected(false);
+		this.rbAmpliarFons.setSelected(false);
+		this.rbAmpliarRes.setSelected(false);
 	}
 	
 	private void textSliders(JSlider s, int espaiTicks) {

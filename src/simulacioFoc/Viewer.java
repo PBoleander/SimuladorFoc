@@ -21,6 +21,7 @@ public class Viewer extends Canvas implements ComponentListener {
 	
 	private boolean pausa;
 	private boolean pintarImatgesFixes;
+	private int ampliacio;
 	
 	@Override
 	public void componentHidden(ComponentEvent e) {}
@@ -59,26 +60,41 @@ public class Viewer extends Canvas implements ComponentListener {
 			int longitudEnPixelsString = g.getFontMetrics().stringWidth(s);
 			g.drawString(s, (this.getWidth() - longitudEnPixelsString) / 2, this.getHeight() / 2);
 		} else {
-			if (pintarImatgesFixes) {
-				pintarImatgesFixes = false;
-				pintaImatgesFixes(g);
+			switch (ampliacio) {
+			case 1: // Fons
+				pintaImatgeFons(g, 0, 0, this.getWidth(), this.getHeight());
+				break;
+			case 2: // Convolucionada
+				pintaImatgeConvolucionada(g, 0, 0, this.getWidth(), this.getHeight());
+				break;
+			case 3: // Foc
+				pintaFoc(g, 0, 0, this.getWidth(), this.getHeight());
+				
+				if (!pausa) {
+					actualitzarFoc();
+					repaint();
+				}
+				break;
+			default: // No ampliació
+				if (pintarImatgesFixes) {
+					pintarImatgesFixes = false;
+					pintaImatgeFons(g, 0, 0, this.getWidth() / 2, this.getHeight() / 2);
+					pintaImatgeConvolucionada(g, 0, this.getHeight() / 2, this.getWidth() / 2, this.getHeight() / 2);
+				}
+				
+				pintaFoc(g, this.getWidth() / 2, 0, this.getWidth() / 2, this.getHeight());
+				
+				if (!pausa) {
+					actualitzarFoc();
+					repaint();
+				}
 			}
-			
-			pintaImatgeVariable(g);
-			
-			try {
-				TimeUnit.MILLISECONDS.sleep(10);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			
-			numRepaint++;
-			boolean actualitzarXispa = (numRepaint % 5 == 0 ? true : false);
-			foc.actualitzar(actualitzarXispa);
-			
-			if (!pausa)
-				repaint();
 		}
+	}
+	
+	public void setAmpliacio(int ampliacio) {
+		if (ampliacio == 0) this.pintarImatgesFixes = true;
+		this.ampliacio = ampliacio;
 	}
 	
 	public void setImatgeFons(Image i) {
@@ -99,24 +115,39 @@ public class Viewer extends Canvas implements ComponentListener {
 		paint(g);
 	}
 	
-	private void pintaImatgesFixes(Graphics g) {
+	private void actualitzarFoc() {
+		try {
+			TimeUnit.MILLISECONDS.sleep(10);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		numRepaint++;
+		boolean actualitzarXispa = (numRepaint % 5 == 0 ? true : false);
+		foc.actualitzar(actualitzarXispa);
+	}
+	
+	private void pintaImatgeConvolucionada(Graphics g, int x, int y, int ample, int alt) {
 		BufferedImage imgFonsConvolucionada = new BufferedImage(imgFons.getWidth(), imgFons.getHeight(), imgFons.getType());
 		imgFonsConvolucionada.setData(Raster.createRaster(imgFons.getSampleModel(), 
 														  new DataBufferByte(foc.getMatriuBordesImgFons(), foc.getMatriuBordesImgFons().length),
 														  new Point()));
 		
-		g.drawImage(imgFons, 0, 0, this.getWidth() / 2, this.getHeight() / 2, null);
-		g.drawImage(imgFonsConvolucionada, 0, this.getHeight() / 2, this.getWidth() / 2, this.getHeight() / 2, null);
+		g.drawImage(imgFonsConvolucionada, x, y, ample, alt, null);
 	}
 	
-	private void pintaImatgeVariable(Graphics g) {
-		BufferedImage borrador = (BufferedImage) createImage(this.getWidth() / 2, this.getHeight());
-		Graphics bufferGraphics = borrador.getGraphics();
+	private void pintaImatgeFons(Graphics g, int x, int y, int ample, int alt) {
+		g.drawImage(imgFons, x, y, ample, alt, null);
+	}
 	
-		bufferGraphics.clearRect(0, 0, borrador.getWidth(), borrador.getHeight());
-		bufferGraphics.drawImage(imgFons, 0, 0, borrador.getWidth(), borrador.getHeight(), null);
-		bufferGraphics.drawImage(foc, 0, 0, borrador.getWidth(), borrador.getHeight(), null);
+	private void pintaFoc(Graphics g, int x, int y, int ample, int alt) {
+		BufferedImage borrador = (BufferedImage) createImage(ample, alt);
+		Graphics borradorGraphics = borrador.getGraphics();
 	
-		g.drawImage(borrador, this.getWidth() / 2, 0, borrador.getWidth(), borrador.getHeight(), null);
+		borradorGraphics.clearRect(0, 0, borrador.getWidth(), borrador.getHeight());
+		borradorGraphics.drawImage(imgFons, 0, 0, borrador.getWidth(), borrador.getHeight(), null);
+		borradorGraphics.drawImage(foc, 0, 0, borrador.getWidth(), borrador.getHeight(), null);
+	
+		g.drawImage(borrador, x, y, borrador.getWidth(), borrador.getHeight(), null);
 	}
 }
