@@ -8,25 +8,25 @@ import java.awt.image.Raster;
 
 public class Foc extends BufferedImage {
 	
-	private int numCanals;
 	private byte[] arrayBytesFoc;
-	private BufferedImage imatgeFons;
 	private byte[] arrayBytesImatgeFons;
-	private int nCanalsImgFons;
-	private int[][] matriuTemperatures;
-	private byte[] matriuBordesImgFons;
-	private Color[] paleta;
-	private boolean xispesABordes;
 	private double factorAltura;
-	private int vent;
+	private BufferedImage imatgeFons;
+	private int numCanals;
+	private int numCanalsImgFons;
+	private byte[] matriuBordesImgFons;
+	private int[][] matriuTemperatures;
+	private Color[] paleta;
 	private int sensibilitatBordes;
 	private int tipusBorde;
+	private int vent;
+	private boolean xispesABordes;
 	
 	public Foc(int ample, int alt, int tipus, BufferedImage imgFons) {
 		super(ample, alt, tipus);
 		
 		this.imatgeFons = imgFons;
-		this.nCanalsImgFons = this.imatgeFons.getColorModel().hasAlpha() ? 4 : 3;
+		this.numCanalsImgFons = (this.imatgeFons.getColorModel().hasAlpha() ? 4 : 3);
 		this.arrayBytesImatgeFons = ((DataBufferByte) this.imatgeFons.getRaster().getDataBuffer()).getData();
 		
 		this.numCanals = (this.getColorModel().hasAlpha() ? 4 : 3);
@@ -137,7 +137,7 @@ public class Foc extends BufferedImage {
 				
 				for (int filaMatriu = 0; filaMatriu < 3; filaMatriu++) {
 					for (int columnaMatriu = 0; columnaMatriu < 3; columnaMatriu++) {
-						Color c = getColorPixel(this.arrayBytesImatgeFons, this.nCanalsImgFons, columnaFons + columnaMatriu - 1, filaFons + filaMatriu - 1);
+						Color c = getColorPixel(this.arrayBytesImatgeFons, this.numCanalsImgFons, columnaFons + columnaMatriu - 1, filaFons + filaMatriu - 1);
 						
 						nouR += matriu[filaMatriu][columnaMatriu] * c.getRed();
 						nouG += matriu[filaMatriu][columnaMatriu] * c.getGreen();
@@ -145,13 +145,13 @@ public class Foc extends BufferedImage {
 					}
 				}
 				
-				setColorPixel(this.matriuBordesImgFons, this.nCanalsImgFons, columnaFons, filaFons, corregirColor(nouR, nouG, nouB));
+				setColorPixel(this.matriuBordesImgFons, this.numCanalsImgFons, columnaFons, filaFons, corregirColor(nouR, nouG, nouB));
 			}
 		}
 	}
 	
 	private boolean esBordeAquestPixel(int fila, int columna) {
-		Color c = getColorPixel(this.matriuBordesImgFons, this.nCanalsImgFons, columna, fila);
+		Color c = getColorPixel(this.matriuBordesImgFons, this.numCanalsImgFons, columna, fila);
 		return ((c.getBlue() + c.getGreen() + c.getRed() >= 3 * 255 - this.sensibilitatBordes) ? true : false);
 	}
 	

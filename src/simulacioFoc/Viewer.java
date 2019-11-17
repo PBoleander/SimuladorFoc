@@ -15,24 +15,21 @@ import java.util.concurrent.TimeUnit;
 public class Viewer extends Canvas implements ComponentListener {
 	
 	private static final long serialVersionUID = 1L;
-	private BufferedImage imgFons;
+	
+	private int ampliacio;
 	private Foc foc;
+	private BufferedImage imgFons;
 	private int numRepaint;
 	
 	private boolean pausa;
 	private boolean pintarImatgesFixes;
-	private int ampliacio;
 	
-	@Override
 	public void componentHidden(ComponentEvent e) {}
-	@Override
 	public void componentMoved(ComponentEvent e) {}
-	@Override
 	public void componentResized(ComponentEvent e) {
 		this.pintarImatgesFixes = true;
 		repaint();
 	}
-	@Override
 	public void componentShown(ComponentEvent e) {
 		this.pintarImatgesFixes = true;
 		repaint();

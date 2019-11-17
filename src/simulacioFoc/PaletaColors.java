@@ -34,8 +34,8 @@ public class PaletaColors {
 		for (int i = 0; i < this.paleta.length; i++) {
 			this.paleta[i] = new Color(0, 0, 0, 0);
 		}
-		this.paleta[0] = c0;
-		this.paleta[85] = c85;
+		this.paleta[0]   =   c0;
+		this.paleta[85]  =  c85;
 		this.paleta[170] = c170;
 		this.paleta[255] = c255;
 	}

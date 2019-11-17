@@ -22,12 +22,12 @@ public class ControlPanel extends JPanel implements MouseListener, ItemListener 
 	
 	private static final long serialVersionUID = 1L;
 	
+	private Choice triaTipusBorde;
 	private JButton btnXispesBordes, btnXispesLiniaInferior, btnPausa, btnTriaImg;
 	final private JFileChooser triadorImg = new JFileChooser();
 	private JLabel mostraError;
-	private JSlider jsAlturaFoc, jsDireccioVent, jsSensibilitatBordes;
 	private JRadioButton rbAmpliarRes, rbAmpliarFons, rbAmpliarConvolucio, rbAmpliarFoc;
-	private Choice triaTipusBorde;
+	private JSlider jsAlturaFoc, jsDireccioVent, jsSensibilitatBordes;
 	private Viewer viewer;
 
 	public void mouseClicked(MouseEvent e) {

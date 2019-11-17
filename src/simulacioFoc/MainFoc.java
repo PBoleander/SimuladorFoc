@@ -8,13 +8,14 @@ import javax.swing.JFrame;
 public class MainFoc extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
-	private Viewer v;
+	
 	private ControlPanel cp;
+	private Viewer viewer;
 	
 	public MainFoc() {
 		super();
-		this.v = new Viewer();
-		this.cp = new ControlPanel(this.v);
+		this.viewer = new Viewer();
+		this.cp = new ControlPanel(this.viewer);
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
@@ -34,7 +35,7 @@ public class MainFoc extends JFrame {
 		
 		c.weightx = 1.0;
 		c.gridx = 1;
-		this.add(v, c);
+		this.add(viewer, c);
 		
 		this.pack();
 	}
