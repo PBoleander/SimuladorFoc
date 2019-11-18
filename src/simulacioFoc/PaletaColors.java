@@ -11,8 +11,8 @@ public class PaletaColors {
 		rellenarPaleta();
 	}
 	
-	public Color[] getPaleta() {
-		return this.paleta;
+	public Color getColor(int index) {
+		return paleta[index];
 	}
 	
 	private Color corregirColor(int r, int g, int b, int a) {

@@ -24,8 +24,8 @@ public class ControlPanel extends JPanel implements MouseListener, ItemListener 
 	
 	private Choice triaTipusBorde;
 	private JButton btnXispesBordes, btnXispesLiniaInferior, btnPausa, btnTriaImg;
-	final private JFileChooser triadorImg = new JFileChooser();
-	private JLabel mostraError;
+	final private JFileChooser fcTriadorImg = new JFileChooser();
+	private JLabel lMostraError;
 	private JRadioButton rbAmpliarRes, rbAmpliarFons, rbAmpliarConvolucio, rbAmpliarFoc;
 	private JSlider jsAlturaFoc, jsDireccioVent, jsSensibilitatBordes;
 	private Viewer viewer;
@@ -75,22 +75,22 @@ public class ControlPanel extends JPanel implements MouseListener, ItemListener 
 			} else if (e.getSource().equals(btnPausa)) {
 				canviaPausa(!this.viewer.getPausa());
 			} else if (e.getSource().equals(btnTriaImg)) {
-				int valorRetornat = triadorImg.showDialog(null, "Obrir");
+				int valorRetornat = fcTriadorImg.showDialog(null, "Obrir");
 				if (valorRetornat == JFileChooser.APPROVE_OPTION) {
 					try {
-						Image img = ImageIO.read(triadorImg.getSelectedFile());
+						Image img = ImageIO.read(fcTriadorImg.getSelectedFile());
 						if (img == null) {
-							this.mostraError.setText("Aquest arxiu no és una imatge");
+							this.lMostraError.setText("Aquest arxiu no és una imatge");
 						} else {
 							this.viewer.setImatgeFons(img);
-							this.mostraError.setText(null);
+							this.lMostraError.setText(null);
 							activarTotsElsObjectes();
 							this.viewer.getFoc().setFactorAltura(calcularAlturaFoc());
 							this.viewer.getFoc().setVent(jsDireccioVent.getValue());
 							this.viewer.getFoc().setSensibilitatBordes(jsSensibilitatBordes.getValue());
 						}
 					} catch (IOException e1) {
-						mostraError.setText("Imatge no trobada");
+						lMostraError.setText("Imatge no trobada");
 					}
 				}
 			}
@@ -111,7 +111,7 @@ public class ControlPanel extends JPanel implements MouseListener, ItemListener 
 		GridBagConstraints b = new GridBagConstraints();
 		b.fill = GridBagConstraints.HORIZONTAL;
 		
-		this.mostraError = afegirLabelNou(mostraError, "", 0, 0, new GridBagConstraints());
+		this.lMostraError = afegirLabelNou(lMostraError, "", 0, 0, new GridBagConstraints());
 		this.btnTriaImg = afegirBotoNou(this.btnTriaImg, "Tria imatge", 0, 1, true, b);
 		this.btnPausa = afegirBotoNou(this.btnPausa, "Pausar", 1, 1, false, b);
 		this.btnXispesBordes = afegirBotoNou(btnXispesBordes, "Xispes als bordes", 0, 2, false, b);
@@ -135,7 +135,7 @@ public class ControlPanel extends JPanel implements MouseListener, ItemListener 
 		GridBagConstraints l = new GridBagConstraints();
 		l.anchor = GridBagConstraints.WEST;
 		afegirLabelNou("Borde de convolució", 0, 14, l);
-		this.triaTipusBorde = afegirChoiceBordes(this.triaTipusBorde, 1, 14, new GridBagConstraints());
+		this.triaTipusBorde = afegirChoiceBordes(this.triaTipusBorde, 1, 14, false, new GridBagConstraints());
 	}
 	
 	private void activarTotsElsObjectes() {
@@ -145,6 +145,7 @@ public class ControlPanel extends JPanel implements MouseListener, ItemListener 
 		this.jsAlturaFoc.setEnabled(true);
 		this.jsDireccioVent.setEnabled(true);
 		this.jsSensibilitatBordes.setEnabled(true);
+		this.triaTipusBorde.setEnabled(true);
 	}
 	
 	private JButton afegirBotoNou(JButton boto, String titol, int x, int y, boolean enabled, GridBagConstraints b) {
@@ -158,12 +159,13 @@ public class ControlPanel extends JPanel implements MouseListener, ItemListener 
 		return boto;
 	}
 	
-	private Choice afegirChoiceBordes(Choice choice, int x, int y, GridBagConstraints c) {
+	private Choice afegirChoiceBordes(Choice choice, int x, int y, boolean enabled, GridBagConstraints c) {
 		choice = new Choice();
 		choice.add("Ambdós");
 		choice.add("Horizontal");
 		choice.add("Vertical");
 		choice.select(0);
+		choice.setEnabled(enabled);
 		
 		choice.addItemListener(this);
 		

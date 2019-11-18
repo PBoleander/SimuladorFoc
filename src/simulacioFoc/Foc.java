@@ -16,7 +16,7 @@ public class Foc extends BufferedImage {
 	private int numCanalsImgFons;
 	private byte[] matriuBordesImgFons;
 	private int[][] matriuTemperatures;
-	private Color[] paleta;
+	private PaletaColors paleta;
 	private int sensibilitatBordes;
 	private int tipusBorde;
 	private int vent;
@@ -28,18 +28,16 @@ public class Foc extends BufferedImage {
 		this.imatgeFons = imgFons;
 		this.numCanalsImgFons = (this.imatgeFons.getColorModel().hasAlpha() ? 4 : 3);
 		this.arrayBytesImatgeFons = ((DataBufferByte) this.imatgeFons.getRaster().getDataBuffer()).getData();
+		this.matriuBordesImgFons = new byte[this.arrayBytesImatgeFons.length];
 		
 		this.numCanals = (this.getColorModel().hasAlpha() ? 4 : 3);
 		this.setData(Raster.createRaster(this.getSampleModel(), new DataBufferByte(ample * alt * this.numCanals), new Point()));
 		this.arrayBytesFoc = ((DataBufferByte) this.getRaster().getDataBuffer()).getData();
-		this.matriuBordesImgFons = new byte[this.arrayBytesImatgeFons.length];
 		
-		PaletaColors pc = new PaletaColors(new Color(0, 0, 0, 0),
-										   new Color(150, 150, 150, 100),
-										   new Color(235, 65, 12, 255),
-										   new Color(255, 255, 255, 255));
-		this.paleta = pc.getPaleta();
-		
+		this.paleta = new PaletaColors(new Color(150, 150, 150, 0),
+									   new Color(0, 0, 0, 100),
+									   new Color(235, 65, 12, 255),
+									   new Color(255, 255, 255, 255));
 		this.xispesABordes = false;
 		
 		detectarBordes(this.tipusBorde);
@@ -98,7 +96,7 @@ public class Foc extends BufferedImage {
 	private void colorejarImatge() {
 		for (int fila = 0; fila < this.getHeight(); fila++) {
 			for (int columna = 0; columna < this.getWidth(); columna++) {
-				setColorPixel(this.arrayBytesFoc, this.numCanals, columna, fila, this.paleta[this.matriuTemperatures[fila][columna]]);
+				setColorPixel(this.arrayBytesFoc, this.numCanals, columna, fila, this.paleta.getColor(this.matriuTemperatures[fila][columna]));
 			}
 		}
 	}
@@ -273,5 +271,4 @@ public class Foc extends BufferedImage {
 			ba[i - 1] = (byte) c.getAlpha();
 		}
 	}
-
 }
