@@ -23,6 +23,7 @@ public class Viewer extends Canvas implements ComponentListener {
 	
 	private boolean pausa;
 	private boolean pintarImatgesFixes;
+	private int tempsEspera;
 	
 	@Override
 	public void componentHidden(ComponentEvent e) {}
@@ -42,6 +43,7 @@ public class Viewer extends Canvas implements ComponentListener {
 	public Viewer() {
 		super();
 		this.pintarImatgesFixes = false;
+		this.tempsEspera = 10;
 		this.setBackground(Color.BLACK);
 		this.addComponentListener(this);
 	}
@@ -72,7 +74,7 @@ public class Viewer extends Canvas implements ComponentListener {
 				pintaFoc(g, 0, 0, this.getWidth(), this.getHeight());
 				
 				if (!pausa) {
-					esperarMilisegons(10);
+					esperarMilisegons(tempsEspera);
 					actualitzarFoc();
 					repaint();
 				}
@@ -87,7 +89,7 @@ public class Viewer extends Canvas implements ComponentListener {
 				pintaFoc(g, this.getWidth() / 2, 0, this.getWidth() / 2, this.getHeight());
 				
 				if (!pausa) {
-					esperarMilisegons(10);
+					esperarMilisegons(tempsEspera);
 					actualitzarFoc();
 					repaint();
 				}
@@ -96,8 +98,8 @@ public class Viewer extends Canvas implements ComponentListener {
 	}
 	
 	public void setAmpliacio(int ampliacio) {
-		if (ampliacio == 0) this.pintarImatgesFixes = true;
 		this.ampliacio = ampliacio;
+		if (ampliacio == 0) this.pintarImatgesFixes = true;
 		netejarViewer();
 	}
 	
@@ -117,6 +119,10 @@ public class Viewer extends Canvas implements ComponentListener {
 	
 	public void setPintarImatgesFixes(boolean pif) {
 		this.pintarImatgesFixes = pif;
+	}
+	
+	public void setTempsEspera(int t) {
+		this.tempsEspera = t;
 	}
 	
 	@Override

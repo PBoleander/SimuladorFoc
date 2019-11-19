@@ -10,6 +10,8 @@ public class Foc extends BufferedImage {
 	
 	private byte[] arrayBytesFoc;
 	private byte[] arrayBytesImatgeFons;
+	private Color c0, cT2, cT3, c255;
+	private int t2, t3;
 	private double factorAltura;
 	private BufferedImage imatgeFons;
 	private int numCanals;
@@ -34,10 +36,15 @@ public class Foc extends BufferedImage {
 		this.setData(Raster.createRaster(this.getSampleModel(), new DataBufferByte(ample * alt * this.numCanals), new Point()));
 		this.arrayBytesFoc = ((DataBufferByte) this.getRaster().getDataBuffer()).getData();
 		
-		this.paleta = new PaletaColors(new Color(150, 150, 150, 0),
-									   new Color(0, 0, 0, 100),
-									   new Color(235, 65, 12, 255),
-									   new Color(255, 255, 255, 255));
+		this.c0 = new Color(150, 150, 150, 0);
+		this.cT2 = new Color(0, 0, 0, 123);
+		this.cT3 = new Color(255, 53, 0, 210);
+		this.c255 = new Color(255, 255, 118, 255);
+		
+		this.t2 = 160;
+		this.t3 = 220;
+		
+		this.paleta = new PaletaColors(c0, t2, cT2, t3, cT3, c255);
 		this.xispesABordes = false;
 		
 		detectarBordes(this.tipusBorde);
@@ -50,8 +57,62 @@ public class Foc extends BufferedImage {
 		if (generarXispes) generarXispes(false);
 	}
 	
+	public Color getColor0() {
+		return this.c0;
+	}
+	
+	public Color getColorT2() {
+		return this.cT2;
+	}
+	
+	public Color getColorT3() {
+		return this.cT3;
+	}
+	
+	public Color getColor255() {
+		return this.c255;
+	}
+	
 	public byte[] getMatriuBordesImgFons() {
 		return this.matriuBordesImgFons;
+	}
+	
+	public int getT2() {
+		return this.t2;
+	}
+	
+	public int getT3() {
+		return this.t3;
+	}
+	
+	public void setColor0(Color c0) {
+		this.c0 = c0;
+		this.paleta = new PaletaColors(c0, t2, cT2, t3, cT3, c255);
+	}
+	
+	public void setColorT2(Color cT2) {
+		this.cT2 = cT2;
+		this.paleta = new PaletaColors(c0, t2, cT2, t3, cT3, c255);
+	}
+	
+	public void setColorT3(Color cT3) {
+		this.cT3 = cT3;
+		this.paleta = new PaletaColors(c0, t2, cT2, t3, cT3, c255);
+	}
+	
+	public void setColor255(Color c255) {
+		this.c255 = c255;
+		this.paleta = new PaletaColors(c0, t2, cT2, t3, cT3, c255);
+	}
+	
+	public void setT2(int t2) {
+		this.t2 = t2;
+		this.paleta = new PaletaColors(c0, t2, cT2, t3, cT3, c255);
+	}
+	
+	public void setT3(int t3) {
+		this.t3 = t3;
+		this.paleta = new PaletaColors(c0, t2, cT2, t3, cT3, c255);
 	}
 	
 	public void setFactorAltura(double factorAlturaFoc) {
@@ -60,6 +121,7 @@ public class Foc extends BufferedImage {
 	
 	public void setSensibilitatBordes(int sb) {
 		this.sensibilitatBordes = sb;
+		detectarBordes(tipusBorde);
 	}
 	public void setTipusBorde(int tipusBorde) {
 		this.tipusBorde = tipusBorde;
@@ -78,7 +140,7 @@ public class Foc extends BufferedImage {
 		double[][] matriuCoeficients = matriuCoeficientsVent(this.vent);
 		for (int fila = this.getHeight() - 2; fila >= 0; fila--) {
 			for (int columna = 1; columna < this.getWidth() - 1; columna++) {
-				if (!this.xispesABordes || (this.xispesABordes && !esBordeAquestPixel(fila, columna))) {
+				if (!this.xispesABordes || (this.xispesABordes && !esConsideraBordeAquestPixel(fila, columna))) {
 					this.matriuTemperatures[fila][columna] = 
 							(int) ((this.matriuTemperatures[fila	][columna - 1] * matriuCoeficients[0][0] +
 									this.matriuTemperatures[fila	][columna	 ] * matriuCoeficients[0][1] +
@@ -144,11 +206,14 @@ public class Foc extends BufferedImage {
 				}
 				
 				setColorPixel(this.matriuBordesImgFons, this.numCanalsImgFons, columnaFons, filaFons, corregirColor(nouR, nouG, nouB));
+				
+				if (!esConsideraBordeAquestPixel(filaFons, columnaFons)) // corregeix matriu bordes segons sensibilitat a bordes
+					setColorPixel(this.matriuBordesImgFons, this.numCanalsImgFons, columnaFons, filaFons, Color.BLACK);
 			}
 		}
 	}
 	
-	private boolean esBordeAquestPixel(int fila, int columna) {
+	private boolean esConsideraBordeAquestPixel(int fila, int columna) {
 		Color c = getColorPixel(this.matriuBordesImgFons, this.numCanalsImgFons, columna, fila);
 		return ((c.getBlue() + c.getGreen() + c.getRed() >= 3 * 255 - this.sensibilitatBordes) ? true : false);
 	}
@@ -247,7 +312,7 @@ public class Foc extends BufferedImage {
 		
 		for (int columna = 1; columna < this.getWidth() - 1; columna++) {
 			if (this.xispesABordes)
-				generarXispaAqui = esBordeAquestPixel(fila, columna);
+				generarXispaAqui = esConsideraBordeAquestPixel(fila, columna);
 			
 			if (generarXispaAqui) {
 				if (inici || !costatsEncesos(fila, columna))

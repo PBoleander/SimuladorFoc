@@ -5,10 +5,13 @@ import java.awt.Color;
 public class PaletaColors {
 	
 	private Color[] paleta;
+	private int temp2, temp3;
+	private Color c2, c3;
 	
-	public PaletaColors(Color c0, Color c85, Color c170, Color c255) {
-		inicialitzarPaleta(c0, c85, c170, c255);
-		rellenarPaleta();
+	public PaletaColors(Color c1, int temp2, Color c2, int temp3, Color c3, Color c4) {
+		ordenar(temp2, c2, temp3, c3);
+		inicialitzarPaleta(0, c1, this.temp2, this.c2, this.temp3, this.c3, 255, c4);
+		rellenarPaleta(0, this.temp2, this.temp3, 255);
 	}
 	
 	public Color getColor(int index) {
@@ -29,47 +32,70 @@ public class PaletaColors {
 		return new Color(r, g, b, a);
 	}
 	
-	private void inicialitzarPaleta(Color c0, Color c85, Color c170, Color c255) {
+	private void inicialitzarPaleta(int temp1, Color c1, int temp2, Color c2, int temp3, Color c3, int temp4, Color c4) {
 		this.paleta = new Color[256];
 		for (int i = 0; i < this.paleta.length; i++) {
 			this.paleta[i] = new Color(0, 0, 0, 0);
 		}
-		this.paleta[0]   =   c0;
-		this.paleta[85]  =  c85;
-		this.paleta[170] = c170;
-		this.paleta[255] = c255;
+		this.paleta[temp1] = c1;
+		this.paleta[temp2] = c2;
+		this.paleta[temp3] = c3;
+		this.paleta[temp4] = c4;
 	}
 	
-	private void rellenarPaleta() {
+	private void ordenar(int t1, Color c1, int t2, Color c2) {
+		int tBackup;
+		Color cBackup;
+		
+		if (t1 > t2) {
+			tBackup = t2;
+			cBackup = c2;
+			t2 = t1;
+			c2 = c1;
+			t1 = tBackup;
+			c1 = cBackup;
+		}
+		
+		this.c2 = c1;
+		this.c3 = c2;
+		this.temp2 = t1;
+		this.temp3 = t2;
+	}
+	
+	private void rellenarPaleta(int temp1, int temp2, int temp3, int temp4) {
 		double deltaR, deltaG, deltaB, deltaA;
 		deltaR = deltaG = deltaB = deltaA = 0;
+		int diferenciaTemperatures = 1;
+		int iDePartida = 0;
 		
 		for (int i = 1; i < this.paleta.length - 1; i++) {
-			switch (i) {
-			case 1:
-				deltaR = (this.paleta[ 85].getRed()   - this.paleta[ 0 ].getRed()  ) / 85.;
-				deltaG = (this.paleta[ 85].getGreen() - this.paleta[ 0 ].getGreen()) / 85.;
-				deltaB = (this.paleta[ 85].getBlue()  - this.paleta[ 0 ].getBlue() ) / 85.;
-				deltaA = (this.paleta[ 85].getAlpha() - this.paleta[ 0 ].getAlpha()) / 85.;
-				break;
-			case 86:
-				deltaR = (this.paleta[170].getRed()   - this.paleta[ 85].getRed()  ) / 85.;
-				deltaG = (this.paleta[170].getGreen() - this.paleta[ 85].getGreen()) / 85.;
-				deltaB = (this.paleta[170].getBlue()  - this.paleta[ 85].getBlue() ) / 85.;
-				deltaA = (this.paleta[170].getAlpha() - this.paleta[ 85].getAlpha()) / 85.;
-				break;
-			case 171:
-				deltaR = (this.paleta[255].getRed()   - this.paleta[170].getRed()  ) / 85.;
-				deltaG = (this.paleta[255].getGreen() - this.paleta[170].getGreen()) / 85.;
-				deltaB = (this.paleta[255].getBlue()  - this.paleta[170].getBlue() ) / 85.;
-				deltaA = (this.paleta[255].getAlpha() - this.paleta[170].getAlpha()) / 85.;
-				break;
+			if (i == temp1 + 1) {
+				diferenciaTemperatures = temp2 - temp1;
+				iDePartida = temp1;
+				deltaR = (this.paleta[temp2].getRed()   - this.paleta[temp1].getRed()  ) / (double) diferenciaTemperatures;
+				deltaG = (this.paleta[temp2].getGreen() - this.paleta[temp1].getGreen()) / (double) diferenciaTemperatures;
+				deltaB = (this.paleta[temp2].getBlue()  - this.paleta[temp1].getBlue() ) / (double) diferenciaTemperatures;
+				deltaA = (this.paleta[temp2].getAlpha() - this.paleta[temp1].getAlpha()) / (double) diferenciaTemperatures;
+			} else if (i == temp2 + 1) {
+				diferenciaTemperatures = temp3 - temp2;
+				iDePartida = temp2;
+				deltaR = (this.paleta[temp3].getRed()   - this.paleta[temp2].getRed()  ) / (double) diferenciaTemperatures;
+				deltaG = (this.paleta[temp3].getGreen() - this.paleta[temp2].getGreen()) / (double) diferenciaTemperatures;
+				deltaB = (this.paleta[temp3].getBlue()  - this.paleta[temp2].getBlue() ) / (double) diferenciaTemperatures;
+				deltaA = (this.paleta[temp3].getAlpha() - this.paleta[temp2].getAlpha()) / (double) diferenciaTemperatures;
+			} else if (i == temp3 + 1) {
+				diferenciaTemperatures = temp4 - temp3;
+				iDePartida = temp3;
+				deltaR = (this.paleta[temp4].getRed()   - this.paleta[temp3].getRed()  ) / (double) diferenciaTemperatures;
+				deltaG = (this.paleta[temp4].getGreen() - this.paleta[temp3].getGreen()) / (double) diferenciaTemperatures;
+				deltaB = (this.paleta[temp4].getBlue()  - this.paleta[temp3].getBlue() ) / (double) diferenciaTemperatures;
+				deltaA = (this.paleta[temp4].getAlpha() - this.paleta[temp3].getAlpha()) / (double) diferenciaTemperatures;
 			}
 			
-			int nouR = (int) (this.paleta[i / 85 * 85].getRed()   + (i % 85) * deltaR);
-			int nouG = (int) (this.paleta[i / 85 * 85].getGreen() + (i % 85) * deltaG);
-			int nouB = (int) (this.paleta[i / 85 * 85].getBlue()  + (i % 85) * deltaB);
-			int nouA = (int) (this.paleta[i / 85 * 85].getAlpha() + (i % 85) * deltaA);
+			int nouR = (int) (this.paleta[iDePartida].getRed()   + (i - iDePartida) * deltaR);
+			int nouG = (int) (this.paleta[iDePartida].getGreen() + (i - iDePartida) * deltaG);
+			int nouB = (int) (this.paleta[iDePartida].getBlue()  + (i - iDePartida) * deltaB);
+			int nouA = (int) (this.paleta[iDePartida].getAlpha() + (i - iDePartida) * deltaA);
 			
 			this.paleta[i] = corregirColor(nouR, nouG, nouB, nouA);
 		}
