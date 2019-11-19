@@ -180,10 +180,10 @@ public class ControlPanel extends JPanel implements MouseListener, ItemListener,
 		afegirLabelNou("Temp = 0", 0, 16, l);
 		this.btnTriaColor0 = afegirBotoNou(this.btnTriaColor0, "Tria color", 1, 16, false, b);
 		afegirLabelNou("Temp =", 0, 17, l);
-		this.selectorT2 = afegirSpinnerNou(this.selectorT2, 85, 1, 254, 1, 0, 17, new GridBagConstraints());
+		this.selectorT2 = afegirSpinnerNou(this.selectorT2, 160, 1, 254, 1, 0, 17, new GridBagConstraints());
 		this.btnTriaColor2 = afegirBotoNou(this.btnTriaColor2, "Tria color", 1, 17, false, b);
 		afegirLabelNou("Temp =", 0, 18, l);
-		this.selectorT3 = afegirSpinnerNou(this.selectorT3, 170, 1, 254, 1, 0, 18, new GridBagConstraints());
+		this.selectorT3 = afegirSpinnerNou(this.selectorT3, 220, 1, 254, 1, 0, 18, new GridBagConstraints());
 		this.btnTriaColor3 = afegirBotoNou(this.btnTriaColor3, "Tria color", 1, 18, false, b);
 		afegirLabelNou("Temp = 255", 0, 19, l);
 		this.btnTriaColor255 = afegirBotoNou(this.btnTriaColor255, "Tria color", 1, 19, false, b);
