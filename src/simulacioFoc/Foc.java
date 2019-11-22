@@ -12,7 +12,7 @@ public class Foc extends BufferedImage {
 	private byte[] arrayBytesImatgeFons;
 	private Color colorT0, colorT2, colorT3, colorT255;
 	private int temp2, temp3;
-	private double factorAltura;
+	private double factorAltura, factorAltura2;
 	private BufferedImage imatgeFons;
 	private int numCanals;
 	private int numCanalsImgFons;
@@ -119,6 +119,10 @@ public class Foc extends BufferedImage {
 		this.factorAltura = factorAlturaFoc;
 	}
 	
+	public void setFactorAltura2(double factorAltura2Foc) {
+		this.factorAltura2 = factorAltura2Foc;
+	}
+	
 	public void setSensibilitatBordes(int sb) {
 		this.sensibilitatBordes = sb;
 		detectarBordes(tipusBorde);
@@ -147,9 +151,11 @@ public class Foc extends BufferedImage {
 									this.matriuTemperatures[fila	][columna + 1] * matriuCoeficients[0][2] +
 									this.matriuTemperatures[fila + 1][columna - 1] * matriuCoeficients[1][0] +
 									this.matriuTemperatures[fila + 1][columna	 ] * matriuCoeficients[1][1] +
-									this.matriuTemperatures[fila + 1][columna + 1] * matriuCoeficients[1][2]) / this.factorAltura);
+									this.matriuTemperatures[fila + 1][columna + 1] * matriuCoeficients[1][2]) / this.factorAltura
+									+ this.factorAltura2);
 					
 					this.matriuTemperatures[fila][columna] = (this.matriuTemperatures[fila][columna] > 255 ? 255 : this.matriuTemperatures[fila][columna]);
+					this.matriuTemperatures[fila][columna] = (this.matriuTemperatures[fila][columna] < 0 ? 0 : this.matriuTemperatures[fila][columna]);
 				}
 			}
 		}
@@ -283,13 +289,13 @@ public class Foc extends BufferedImage {
 	private int[][] matriuConvolucioBordes(int tipusBordes) {
 		switch (tipusBordes) {
 		case 1: // Horizontal
-			int[][] matriu1 = {{ 1,  2,  1},
+			int[][] matriu1 = {{-1, -1, -1},
 							   { 0,  0,  0},
-							   {-1, -2, -1}};
+							   { 1,  1,  1}};
 			return matriu1;
 		case 2: // Vertical
 			int[][] matriu2 = {{-1, 0, 1},
-							   {-2, 0, 2},
+							   {-1, 0, 1},
 							   {-1, 0, 1}};
 			return matriu2;
 		default: // Ambdós

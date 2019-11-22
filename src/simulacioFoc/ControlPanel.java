@@ -35,7 +35,7 @@ public class ControlPanel extends JPanel implements MouseListener, ItemListener,
 	final private JFileChooser fcTriadorImg = new JFileChooser();
 	private JLabel lMostraError;
 	private JRadioButton rbAmpliarRes, rbAmpliarFons, rbAmpliarConvolucio, rbAmpliarFoc;
-	private JSlider jsAlturaFoc, jsDireccioVent, jsSensibilitatBordes, jsVelocitatFoc;
+	private JSlider jsAlturaFoc, jsAlturaFoc2, jsDireccioVent, jsSensibilitatBordes, jsVelocitatFoc;
 	private JSpinner selectorT2, selectorT3;
 	private Viewer viewer;
 
@@ -61,6 +61,8 @@ public class ControlPanel extends JPanel implements MouseListener, ItemListener,
 		if (e.getSource() instanceof JSlider && ((JSlider) e.getSource()).isEnabled()) {
 			if (e.getSource().equals(jsAlturaFoc)) {
 				this.viewer.getFoc().setFactorAltura(calcularAlturaFoc());
+			} else if (e.getSource().equals(jsAlturaFoc2)) {
+				this.viewer.getFoc().setFactorAltura2(calcularAlturaFoc2());
 			} else if (e.getSource().equals(jsDireccioVent)) {
 				this.viewer.getFoc().setVent(jsDireccioVent.getValue());
 			} else if (e.getSource().equals(jsSensibilitatBordes)) {
@@ -149,47 +151,49 @@ public class ControlPanel extends JPanel implements MouseListener, ItemListener,
 		
 		GridBagConstraints b = new GridBagConstraints();
 		b.fill = GridBagConstraints.HORIZONTAL;
+		int y = 0;
 		
-		this.lMostraError = afegirLabelNou(lMostraError, "", 0, 0, new GridBagConstraints());
-		this.btnTriaImg = afegirBotoNou(this.btnTriaImg, "Tria imatge", 0, 1, true, b);
-		this.btnPausa = afegirBotoNou(this.btnPausa, "Pausar", 1, 1, false, b);
-		this.btnXispesBordes = afegirBotoNou(btnXispesBordes, "Xispes als bordes", 0, 2, false, b);
-		this.btnXispesLiniaInferior = afegirBotoNou(this.btnXispesLiniaInferior, "Xispes a base", 1, 2, false, b);
+		this.lMostraError = afegirLabelNou(lMostraError, "", 0, y++, new GridBagConstraints());
+		this.btnTriaImg = afegirBotoNou(this.btnTriaImg, "Tria imatge", 0, y, true, b);
+		this.btnPausa = afegirBotoNou(this.btnPausa, "Pausar", 1, y++, false, b);
+		this.btnXispesBordes = afegirBotoNou(btnXispesBordes, "Xispes als bordes", 0, y, false, b);
+		this.btnXispesLiniaInferior = afegirBotoNou(this.btnXispesLiniaInferior, "Xispes a base", 1, y++, false, b);
 		
-		afegirLabelNou("Altura foc", 0, 5, new GridBagConstraints());
-		this.jsAlturaFoc = afegirSliderNou(this.jsAlturaFoc, 0, 100, 50, 0, 6, 10, false, new GridBagConstraints());
+		afegirLabelNou("Altura foc", 0, y++, new GridBagConstraints());
+		this.jsAlturaFoc = afegirSliderNou(this.jsAlturaFoc, 0, 100, 50, 0, y++, 10, false, new GridBagConstraints());
+		this.jsAlturaFoc2 = afegirSliderNou(this.jsAlturaFoc2, -20, 20, 0, 0, y++, 5, false, new GridBagConstraints());
 		
-		afegirLabelNou("Direcció vent", 0, 7, new GridBagConstraints());
-		this.jsDireccioVent = afegirSliderNou(this.jsDireccioVent, -1, 1, 0, 0, 8, 1, false, new GridBagConstraints());
+		afegirLabelNou("Direcció vent", 0, y++, new GridBagConstraints());
+		this.jsDireccioVent = afegirSliderNou(this.jsDireccioVent, -1, 1, 0, 0, y++, 1, false, new GridBagConstraints());
 		
-		afegirLabelNou("Sensibilitat detecció bordes", 0, 9, new GridBagConstraints());
-		this.jsSensibilitatBordes = afegirSliderNou(this.jsSensibilitatBordes, 0, 700, 700, 0, 10, 100, false, new GridBagConstraints());
+		afegirLabelNou("Sensibilitat detecció bordes", 0, y++, new GridBagConstraints());
+		this.jsSensibilitatBordes = afegirSliderNou(this.jsSensibilitatBordes, 0, 700, 700, 0, y++, 100, false, new GridBagConstraints());
 		
-		afegirLabelNou("Imatge a ampliar", 0, 11, new GridBagConstraints());
-		this.rbAmpliarRes = afegirRadioNou(this.rbAmpliarRes, "Cap", 0, 12, true, new GridBagConstraints());
-		this.rbAmpliarFons = afegirRadioNou(this.rbAmpliarFons, "Fons", 1, 12, false, new GridBagConstraints());
-		this.rbAmpliarConvolucio = afegirRadioNou(this.rbAmpliarConvolucio, "Convolucionada", 0, 13, false, new GridBagConstraints());
-		this.rbAmpliarFoc = afegirRadioNou(this.rbAmpliarFoc, "Resultat", 1, 13, false, new GridBagConstraints());
+		afegirLabelNou("Imatge a ampliar", 0, y++, new GridBagConstraints());
+		this.rbAmpliarRes = afegirRadioNou(this.rbAmpliarRes, "Cap", 0, y, true, new GridBagConstraints());
+		this.rbAmpliarFons = afegirRadioNou(this.rbAmpliarFons, "Fons", 1, y++, false, new GridBagConstraints());
+		this.rbAmpliarConvolucio = afegirRadioNou(this.rbAmpliarConvolucio, "Convolucionada", 0, y, false, new GridBagConstraints());
+		this.rbAmpliarFoc = afegirRadioNou(this.rbAmpliarFoc, "Resultat", 1, y++, false, new GridBagConstraints());
 		
 		GridBagConstraints l = new GridBagConstraints();
 		l.anchor = GridBagConstraints.WEST;
-		afegirLabelNou("Borde de convolució", 0, 14, l);
-		this.choiceTriaTipusBorde = afegirChoiceBordes(this.choiceTriaTipusBorde, 1, 14, false, new GridBagConstraints());
+		afegirLabelNou("Borde de convolució", 0, y, l);
+		this.choiceTriaTipusBorde = afegirChoiceBordes(this.choiceTriaTipusBorde, 1, y++, false, new GridBagConstraints());
 		
-		afegirLabelNou("Paleta de colors", 0, 15, new GridBagConstraints());
-		afegirLabelNou("Temp = 0", 0, 16, l);
-		this.btnTriaColor0 = afegirBotoNou(this.btnTriaColor0, "Tria color", 1, 16, false, b);
-		afegirLabelNou("Temp =", 0, 17, l);
-		this.selectorT2 = afegirSpinnerNou(this.selectorT2, 160, 1, 254, 1, 0, 17, new GridBagConstraints());
-		this.btnTriaColor2 = afegirBotoNou(this.btnTriaColor2, "Tria color", 1, 17, false, b);
-		afegirLabelNou("Temp =", 0, 18, l);
-		this.selectorT3 = afegirSpinnerNou(this.selectorT3, 220, 1, 254, 1, 0, 18, new GridBagConstraints());
-		this.btnTriaColor3 = afegirBotoNou(this.btnTriaColor3, "Tria color", 1, 18, false, b);
-		afegirLabelNou("Temp = 255", 0, 19, l);
-		this.btnTriaColor255 = afegirBotoNou(this.btnTriaColor255, "Tria color", 1, 19, false, b);
+		afegirLabelNou("Paleta de colors", 0, y++, new GridBagConstraints());
+		afegirLabelNou("Temp = 0", 0, y, l);
+		this.btnTriaColor0 = afegirBotoNou(this.btnTriaColor0, "Tria color", 1, y++, false, b);
+		afegirLabelNou("Temp =", 0, y, l);
+		this.selectorT2 = afegirSpinnerNou(this.selectorT2, 160, 1, 254, 1, 0, y, new GridBagConstraints());
+		this.btnTriaColor2 = afegirBotoNou(this.btnTriaColor2, "Tria color", 1, y++, false, b);
+		afegirLabelNou("Temp =", 0, y, l);
+		this.selectorT3 = afegirSpinnerNou(this.selectorT3, 220, 1, 254, 1, 0, y, new GridBagConstraints());
+		this.btnTriaColor3 = afegirBotoNou(this.btnTriaColor3, "Tria color", 1, y++, false, b);
+		afegirLabelNou("Temp = 255", 0, y, l);
+		this.btnTriaColor255 = afegirBotoNou(this.btnTriaColor255, "Tria color", 1, y++, false, b);
 		
-		afegirLabelNou("Velocitat foc", 0, 20, new GridBagConstraints());
-		this.jsVelocitatFoc = afegirSliderNou(this.jsVelocitatFoc, 0, 200, 10, 0, 21, 20, true, new GridBagConstraints());
+		afegirLabelNou("Velocitat foc", 0, y++, new GridBagConstraints());
+		this.jsVelocitatFoc = afegirSliderNou(this.jsVelocitatFoc, 0, 200, 10, 0, y++, 20, true, new GridBagConstraints());
 	}
 	
 	private void activarTotsElsObjectes() {
@@ -197,6 +201,7 @@ public class ControlPanel extends JPanel implements MouseListener, ItemListener,
 		this.btnXispesBordes.setEnabled(true);
 		this.btnXispesLiniaInferior.setEnabled(true);
 		this.jsAlturaFoc.setEnabled(true);
+		this.jsAlturaFoc2.setEnabled(true);
 		this.jsDireccioVent.setEnabled(true);
 		this.jsSensibilitatBordes.setEnabled(true);
 		this.choiceTriaTipusBorde.setEnabled(true);
@@ -292,6 +297,10 @@ public class ControlPanel extends JPanel implements MouseListener, ItemListener,
 	
 	private double calcularAlturaFoc() {
 		return 7.485 + 0.0008 * (100 - jsAlturaFoc.getValue());
+	}
+	
+	private double calcularAlturaFoc2() {
+		return 0.1 * jsAlturaFoc2.getValue();
 	}
 	
 	private void canviaPausa(boolean pausa) {
