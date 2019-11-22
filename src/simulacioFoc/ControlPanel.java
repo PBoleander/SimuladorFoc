@@ -192,7 +192,7 @@ public class ControlPanel extends JPanel implements MouseListener, ItemListener,
 		afegirLabelNou("Temp = 255", 0, y, l);
 		this.btnTriaColor255 = afegirBotoNou(this.btnTriaColor255, "Tria color", 1, y++, false, b);
 		
-		afegirLabelNou("Velocitat foc", 0, y++, new GridBagConstraints());
+		afegirLabelNou("Temps de refresc (ms)", 0, y++, new GridBagConstraints());
 		this.jsVelocitatFoc = afegirSliderNou(this.jsVelocitatFoc, 0, 200, 10, 0, y++, 20, true, new GridBagConstraints());
 	}
 	
@@ -209,6 +209,8 @@ public class ControlPanel extends JPanel implements MouseListener, ItemListener,
 		this.btnTriaColor2.setEnabled(true);
 		this.btnTriaColor3.setEnabled(true);
 		this.btnTriaColor255.setEnabled(true);
+		this.selectorT2.setEnabled(true);
+		this.selectorT3.setEnabled(true);
 	}
 	
 	private JButton afegirBotoNou(JButton boto, String titol, int x, int y, boolean enabled, GridBagConstraints b) {
@@ -287,6 +289,7 @@ public class ControlPanel extends JPanel implements MouseListener, ItemListener,
 		SpinnerNumberModel model = new SpinnerNumberModel(valorInicial, valorMin, valorMax, pas);
 		spinner = new JSpinner(model);
 		spinner.addChangeListener(this);
+		spinner.setEnabled(false);
 		s.gridx = x;
 		s.gridy = y;
 		s.insets = new Insets(0, 20, 0, 0);

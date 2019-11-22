@@ -47,7 +47,7 @@ public class Foc extends BufferedImage {
 		this.paleta = new PaletaColors(colorT0, temp2, colorT2, temp3, colorT3, colorT255);
 		this.xispesABordes = false;
 		
-		detectarBordes(this.tipusBorde);
+		detectarBordes();
 		iniciar();
 	}
 	
@@ -125,11 +125,11 @@ public class Foc extends BufferedImage {
 	
 	public void setSensibilitatBordes(int sb) {
 		this.sensibilitatBordes = sb;
-		detectarBordes(tipusBorde);
+		detectarBordes();
 	}
 	public void setTipusBorde(int tipusBorde) {
 		this.tipusBorde = tipusBorde;
-		detectarBordes(tipusBorde);
+		detectarBordes();
 	}
 	public void setVent(int vent) {
 		this.vent = vent;
@@ -141,7 +141,7 @@ public class Foc extends BufferedImage {
 	}
 	
 	private void actualitzarMatriuT() {
-		double[][] matriuCoeficients = matriuCoeficientsVent(this.vent);
+		double[][] matriuCoeficients = matriuCoeficientsVent();
 		for (int fila = this.getHeight() - 2; fila >= 0; fila--) {
 			for (int columna = 1; columna < this.getWidth() - 1; columna++) {
 				if (!this.xispesABordes || (this.xispesABordes && !esConsideraBordeAquestPixel(fila, columna))) {
@@ -193,8 +193,9 @@ public class Foc extends BufferedImage {
 				     this.matriuTemperatures[fila - 1][columna + 1] > 0) ? true : false);
 	}
 	
-	private void detectarBordes(int tipusBordes) {
-		int[][] matriu = matriuConvolucioBordes(tipusBordes);
+	private void detectarBordes() {
+		int[][] matriu = matriuConvolucioBordes();
+		int factorCorreccio = determinaFactorCorreccio();
 		int nouR, nouG, nouB;
 		
 		for (int filaFons = 1; filaFons < this.getHeight() - 1; filaFons++) {
@@ -211,11 +212,26 @@ public class Foc extends BufferedImage {
 					}
 				}
 				
+				nouR /= factorCorreccio;
+				nouG /= factorCorreccio;
+				nouB /= factorCorreccio;
+				
 				setColorPixel(this.matriuBordesImgFons, this.numCanalsImgFons, columnaFons, filaFons, corregirColor(nouR, nouG, nouB));
 				
 				if (!esConsideraBordeAquestPixel(filaFons, columnaFons)) // corregeix matriu bordes segons sensibilitat a bordes
 					setColorPixel(this.matriuBordesImgFons, this.numCanalsImgFons, columnaFons, filaFons, Color.BLACK);
 			}
+		}
+	}
+	
+	private int determinaFactorCorreccio() {
+		switch (tipusBorde) {
+		case 1: // Horitzontal
+			return 4;
+		case 2: // Vertical
+			return 4;
+		default: // Ambdós
+			return 1;
 		}
 	}
 	
@@ -267,7 +283,7 @@ public class Foc extends BufferedImage {
 		generarXispes(true);
 	}
 	
-	private double[][] matriuCoeficientsVent(int vent) {
+	private double[][] matriuCoeficientsVent() {
 		switch (vent) {
 		case -1:
 			double[][] matriuMenos1 = {{0.0, 2.0, 2.5}, 
@@ -286,8 +302,8 @@ public class Foc extends BufferedImage {
 		}
 	}
 	
-	private int[][] matriuConvolucioBordes(int tipusBordes) {
-		switch (tipusBordes) {
+	private int[][] matriuConvolucioBordes() {
+		switch (tipusBorde) {
 		case 1: // Horizontal
 			int[][] matriu1 = {{-1, -1, -1},
 							   { 0,  0,  0},

@@ -100,7 +100,7 @@ public class Viewer extends Canvas implements ComponentListener {
 	public void setAmpliacio(int ampliacio) {
 		this.ampliacio = ampliacio;
 		if (ampliacio == 0) this.pintarImatgesFixes = true;
-		netejarViewer();
+		netejarViewer(); // si no se fa i la imatge té transparència es veu la imatge que hi ha abaix
 	}
 	
 	public void setImatgeFons(Image i) {
@@ -109,7 +109,7 @@ public class Viewer extends Canvas implements ComponentListener {
 		this.numRepaint = 0;
 		this.pausa = false;
 		this.pintarImatgesFixes = true;
-		netejarViewer();
+		netejarViewer(); // en imatges amb transparència s'ha de netejar el viewer, si no se veu la imatge que hi havia abans
 		repaint();
 	}
 	
