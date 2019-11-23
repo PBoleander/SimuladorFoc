@@ -14,6 +14,14 @@ public class PaletaColors {
 		rellenarPaleta(0, this.temp2, this.temp3, 255);
 	}
 	
+	public int getT2() {
+		return temp2;
+	}
+	
+	public int getT3() {
+		return temp3;
+	}
+	
 	public Color getColor(int index) {
 		return paleta[index];
 	}

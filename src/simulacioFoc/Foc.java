@@ -77,6 +77,10 @@ public class Foc extends BufferedImage {
 		return this.matriuBordesImgFons;
 	}
 	
+	public PaletaColors getPaleta() {
+		return this.paleta;
+	}
+	
 	public int getT2() {
 		return this.temp2;
 	}
@@ -103,6 +107,16 @@ public class Foc extends BufferedImage {
 	public void setColor255(Color c255) {
 		this.colorT255 = c255;
 		this.paleta = new PaletaColors(colorT0, temp2, colorT2, temp3, colorT3, c255);
+	}
+	
+	public void setPaleta(PaletaColors paleta) {
+		this.paleta = paleta;
+		setColor0(paleta.getColor(0));
+		setT2(paleta.getT2());
+		setColorT2(paleta.getColor(temp2));
+		setT3(paleta.getT3());
+		setColorT3(paleta.getColor(temp3));
+		setColor255(paleta.getColor(255));
 	}
 	
 	public void setT2(int t2) {

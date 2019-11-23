@@ -37,6 +37,7 @@ public class ControlPanel extends JPanel implements MouseListener, ItemListener,
 	private JRadioButton rbAmpliarRes, rbAmpliarFons, rbAmpliarConvolucio, rbAmpliarFoc;
 	private JSlider jsAlturaFoc, jsAlturaFoc2, jsDireccioVent, jsSensibilitatBordes, jsVelocitatFoc;
 	private JSpinner selectorT2, selectorT3;
+	private PaletaColors paleta;
 	private Viewer viewer;
 
 	@Override
@@ -93,6 +94,7 @@ public class ControlPanel extends JPanel implements MouseListener, ItemListener,
 				int valorRetornat = fcTriadorImg.showDialog(null, "Obrir");
 				if (valorRetornat == JFileChooser.APPROVE_OPTION) {
 					try {
+						if (this.viewer.getFoc() != null) this.paleta = this.viewer.getFoc().getPaleta();
 						Image img = ImageIO.read(fcTriadorImg.getSelectedFile());
 						if (img == null) {
 							this.lMostraError.setText("Aquest arxiu no és una imatge");
@@ -103,6 +105,7 @@ public class ControlPanel extends JPanel implements MouseListener, ItemListener,
 							this.viewer.getFoc().setFactorAltura(calcularAlturaFoc());
 							this.viewer.getFoc().setVent(jsDireccioVent.getValue());
 							this.viewer.getFoc().setSensibilitatBordes(jsSensibilitatBordes.getValue());
+							if (paleta != null) this.viewer.getFoc().setPaleta(paleta);
 						}
 					} catch (IOException e1) {
 						lMostraError.setText("Imatge no trobada");
